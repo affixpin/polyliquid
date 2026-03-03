@@ -38,7 +38,7 @@ export function Hero() {
             </div>
             <div className="text-[16px] text-text-3 pb-1 md:pb-2">vs</div>
             <div>
-              <div className="font-mono text-[30px] md:text-[40px] font-extrabold text-text-1 tracking-tight leading-none">$10.71M</div>
+              <div className="font-mono text-[30px] md:text-[40px] font-extrabold text-text-1 tracking-tight leading-none">$∞</div>
               <div className="text-[12px] text-text-3 mt-2">Polyliquid</div>
             </div>
           </div>

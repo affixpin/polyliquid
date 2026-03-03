@@ -50,7 +50,7 @@ export function TheSplit() {
               <CompRow label="Influence model" poly="Stake &times; Reputation" />
               <CompRow label="Attack method" poly="Impossible without reputation" />
               <CompRow label="Time to influence" poly="Months of correct votes" />
-              <CompRow label="Attack cost" poly="$10.71M + years of history" highlight />
+              <CompRow label="Attack cost" poly="$∞ + years of history" highlight />
               <CompRow label="Consequence" poly="Lose all stake + reputation" />
             </div>
           </CardContent>
