@@ -1,0 +1,13 @@
+<svg width="250" height="50" viewBox="0 0 250 50" xmlns="http://www.w3.org/2000/svg">
+  <!-- Icon: Converging arrows to circle with thicker lines (stroke-width increased to 3 for "fat" appearance) -->
+  <g transform="translate(10,10)" stroke="currentColor" stroke-width="3" fill="none">
+    <line x1="0" y1="0" x2="10" y2="10"/>
+    <line x1="0" y1="15" x2="8" y2="15"/>
+    <line x1="0" y1="30" x2="10" y2="20"/>
+    <circle cx="15" cy="15" r="5" fill="#FFFFFF" stroke="none"/>
+    <line x1="22" y1="15" x2="32" y2="15"/>
+    <path d="M29 10 L32 15 L29 20"/>
+  </g>
+  <!-- Wordmark -->
+  <text x="50" y="35" font-family="monospace" font-size="24" fill="currentColor">polyliquid</text>
+</svg>

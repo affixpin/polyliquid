@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavLink } from "react-router";
 import { Sun, Moon, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/logo";
 import { useTheme } from "@/lib/theme-context";
 
 export function Nav() {
@@ -22,9 +23,12 @@ export function Nav() {
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-8 h-13 bg-[var(--navy)]/85 backdrop-blur-xl border-b border-border">
         <div className="flex items-center gap-2.5">
-          <NavLink to="/" className="font-mono text-[13px] font-bold text-text-1 no-underline">polyliquid</NavLink>
+          <NavLink to="/" className="flex items-center gap-1.5 font-mono text-[13px] font-bold text-text-1 no-underline">
+            <Logo size={22} />
+            polyliquid
+          </NavLink>
           <span className="font-mono text-[9px] font-semibold px-1.5 py-0.5 rounded bg-brand/12 text-brand-bright uppercase tracking-wide">
-            v1.0
+            beta
           </span>
         </div>
 
