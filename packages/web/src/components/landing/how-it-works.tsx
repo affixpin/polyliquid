@@ -10,7 +10,7 @@ export function HowItWorks() {
   return (
     <section className="max-w-[1140px] mx-auto px-8 py-16">
       <div className="font-mono text-[11px] font-semibold text-brand-bright uppercase tracking-wide mb-2">How It Works</div>
-      <h2 className="text-[36px] font-bold tracking-tight text-white leading-tight mb-2">
+      <h2 className="text-[36px] font-bold tracking-tight text-text-1 leading-tight mb-2">
         Three layers of security
       </h2>
       <p className="text-[15px] text-text-2 max-w-[460px] mb-9">
@@ -19,13 +19,13 @@ export function HowItWorks() {
 
       <div className="grid grid-cols-3 gap-3">
         {steps.map((s) => (
-          <Card key={s.n} className="group bg-surface border-border hover:border-[#3c3936] hover:-translate-y-0.5 transition-all overflow-hidden relative py-0">
+          <Card key={s.n} className="group bg-surface border-border hover:border-border-bright hover:-translate-y-0.5 transition-all overflow-hidden relative py-0">
             <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-brand to-success opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <CardContent className="p-6">
               <span className="font-mono text-[11px] font-bold text-brand-bright bg-brand/12 px-2 py-0.5 rounded inline-block mb-3.5">
                 {s.n}
               </span>
-              <h3 className="text-[17px] font-bold text-white mb-2">{s.title}</h3>
+              <h3 className="text-[17px] font-bold text-text-1 mb-2">{s.title}</h3>
               <p className="text-[13px] text-text-3 leading-relaxed">{s.desc}</p>
             </CardContent>
           </Card>

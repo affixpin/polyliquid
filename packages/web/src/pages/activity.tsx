@@ -5,7 +5,7 @@ const tierStyles: Record<string, string> = {
   Elite: "text-brand-bright bg-brand/12",
   Top: "text-success bg-success/10",
   Medium: "text-amber bg-amber/10",
-  New: "text-text-3 bg-white/4",
+  New: "text-text-3 bg-muted",
 };
 
 const statusStyles: Record<string, string> = {
@@ -167,7 +167,7 @@ export function ActivityPage() {
         <div className="font-mono text-[11px] font-semibold text-brand-bright uppercase tracking-wide mb-2">
           Activity Feed
         </div>
-        <h1 className="text-[36px] font-bold tracking-tight text-white leading-tight mb-2">
+        <h1 className="text-[36px] font-bold tracking-tight text-text-1 leading-tight mb-2">
           Resolution timeline
         </h1>
         <p className="text-[15px] text-text-2 max-w-[520px]">
@@ -189,14 +189,13 @@ export function ActivityPage() {
           const isOpen = expanded === i;
           const totalWeight = e.breakdown.reduce((s, v) => s + v.weight, 0);
           const yesWeight = e.breakdown.filter((v) => v.vote === "Yes").reduce((s, v) => s + v.weight, 0);
-          const noWeight = totalWeight - yesWeight;
           const yesPct = Math.round((yesWeight / totalWeight) * 100);
           const noPct = 100 - yesPct;
 
           return (
             <Card
               key={i}
-              className="bg-surface border-border hover:border-[#3c3936] transition-all py-0 gap-0 overflow-hidden cursor-pointer"
+              className="bg-surface border-border hover:border-border-bright transition-all py-0 gap-0 overflow-hidden cursor-pointer"
               onClick={() => setExpanded(isOpen ? null : i)}
             >
               <CardContent className="p-0">
@@ -204,7 +203,7 @@ export function ActivityPage() {
                 <div className="grid grid-cols-[100px_1fr_90px_80px_80px_32px] gap-4 items-center px-5 py-3.5">
                   <span className="font-mono text-[11px] text-text-3">{e.time}</span>
                   <div>
-                    <div className="text-[14px] font-medium text-white leading-snug">{e.market}</div>
+                    <div className="text-[14px] font-medium text-text-1 leading-snug">{e.market}</div>
                     <div className="font-mono text-[11px] text-text-3 mt-0.5">
                       {e.voters} voters &middot; {e.volume}
                     </div>
@@ -220,7 +219,7 @@ export function ActivityPage() {
                   }`}>
                     {e.outcome}
                   </span>
-                  <span className={`font-mono text-[13px] font-bold text-right ${e.consensus === "\u2014" ? "text-text-3" : "text-white"}`}>
+                  <span className={`font-mono text-[13px] font-bold text-right ${e.consensus === "\u2014" ? "text-text-3" : "text-text-1"}`}>
                     {e.consensus}
                   </span>
                   <svg
@@ -257,7 +256,7 @@ export function ActivityPage() {
                             <span className={`font-mono text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded shrink-0 ${tierStyles[v.tier]}`}>
                               {v.tier}
                             </span>
-                            <div className="flex-1 h-1.5 rounded-full bg-white/6 mx-1">
+                            <div className="flex-1 h-1.5 rounded-full bg-border mx-1">
                               <div
                                 className={`h-full rounded-full ${v.vote === "Yes" ? "bg-success" : "bg-danger"}`}
                                 style={{ width: `${pct}%` }}
@@ -282,7 +281,7 @@ export function ActivityPage() {
   );
 }
 
-function StatCard({ label, value, color = "text-white" }: { label: string; value: string; color?: string }) {
+function StatCard({ label, value, color = "text-text-1" }: { label: string; value: string; color?: string }) {
   return (
     <Card className="bg-surface border-border py-0 gap-0">
       <div className="p-4">

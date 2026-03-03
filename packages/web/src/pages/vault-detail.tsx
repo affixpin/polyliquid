@@ -7,7 +7,7 @@ const tierStyles: Record<string, string> = {
   Elite: "text-brand-bright bg-brand/12",
   Top: "text-success bg-success/10",
   Medium: "text-amber bg-amber/10",
-  New: "text-text-3 bg-white/4",
+  New: "text-text-3 bg-muted",
 };
 
 const vaults: Record<string, {
@@ -100,7 +100,7 @@ export function VaultDetailPage() {
           {/* Vault header */}
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-[32px] font-bold tracking-tight text-white">{vault.name}</h1>
+              <h1 className="text-[32px] font-bold tracking-tight text-text-1">{vault.name}</h1>
               <span className={`font-mono text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded ${tierStyles[vault.tier]}`}>
                 {vault.tier}
               </span>
@@ -122,7 +122,7 @@ export function VaultDetailPage() {
           <Card className="bg-surface border-border py-0 gap-0">
             <CardContent className="p-0">
               <div className="px-5 py-3 border-b border-border">
-                <span className="text-[14px] font-semibold text-white">Vault details</span>
+                <span className="text-[14px] font-semibold text-text-1">Vault details</span>
               </div>
               <div className="divide-y divide-border">
                 <DetailRow label="Currency accepted" value={
@@ -145,7 +145,7 @@ export function VaultDetailPage() {
           <Card className="bg-surface border-border py-0 gap-0">
             <CardContent className="p-0">
               <div className="px-5 py-3 border-b border-border">
-                <span className="text-[14px] font-semibold text-white">Recent activity</span>
+                <span className="text-[14px] font-semibold text-text-1">Recent activity</span>
               </div>
               <div className="divide-y divide-border">
                 {vault.activity.map((a, i) => (
@@ -181,7 +181,7 @@ export function VaultDetailPage() {
                   onClick={() => setTab("deposit")}
                   className={`flex-1 py-3 text-[13px] font-semibold text-center transition-colors cursor-pointer ${
                     tab === "deposit"
-                      ? "text-white border-b-2 border-brand"
+                      ? "text-text-1 border-b-2 border-brand"
                       : "text-text-3 hover:text-text-2"
                   }`}
                 >
@@ -191,7 +191,7 @@ export function VaultDetailPage() {
                   onClick={() => setTab("withdraw")}
                   className={`flex-1 py-3 text-[13px] font-semibold text-center transition-colors cursor-pointer ${
                     tab === "withdraw"
-                      ? "text-white border-b-2 border-brand"
+                      ? "text-text-1 border-b-2 border-brand"
                       : "text-text-3 hover:text-text-2"
                   }`}
                 >
@@ -204,7 +204,7 @@ export function VaultDetailPage() {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <img src={vault.currencyIcon} alt={vault.currency} className="w-[20px] h-[20px] rounded-full" />
-                    <span className="text-[14px] font-semibold text-white">{vault.currency}</span>
+                    <span className="text-[14px] font-semibold text-text-1">{vault.currency}</span>
                   </div>
                   <div className="text-right">
                     <div className="font-mono text-[11px] text-text-3">
@@ -223,7 +223,7 @@ export function VaultDetailPage() {
                     placeholder="0.00"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="w-full bg-[var(--navy-alt)] border border-border rounded-lg px-4 py-3 font-mono text-[20px] font-bold text-white placeholder:text-text-3/50 focus:outline-none focus:border-brand/40 transition-colors"
+                    className="w-full bg-[var(--navy-alt)] border border-border rounded-lg px-4 py-3 font-mono text-[20px] font-bold text-text-1 placeholder:text-text-3/50 focus:outline-none focus:border-brand/40 transition-colors"
                   />
                   <button
                     onClick={() => setAmount(tab === "deposit" ? "10000" : "0")}
@@ -258,7 +258,7 @@ export function VaultDetailPage() {
                 </div>
 
                 {/* Action button */}
-                <Button className="w-full bg-brand hover:bg-brand/90 text-white font-semibold shadow-[0_2px_12px_rgba(229,168,35,.15)] hover:shadow-[0_4px_20px_rgba(229,168,35,.25)] transition-all">
+                <Button className="w-full bg-brand hover:bg-brand/90 text-text-1 font-semibold shadow-[0_2px_12px_var(--pl-brand-glow)] hover:shadow-[0_4px_20px_var(--pl-brand-glow-hover)] transition-all">
                   {tab === "deposit" ? "Deposit" : "Withdraw"} {vault.currency}
                 </Button>
 
@@ -283,7 +283,7 @@ function MetricCard({ label, value, highlight }: { label: string; value: string;
     <Card className="bg-surface border-border py-0 gap-0">
       <div className="p-4">
         <div className="font-mono text-[10px] font-semibold text-dim uppercase tracking-wide mb-1">{label}</div>
-        <div className={`font-mono text-[20px] font-extrabold tracking-tight ${highlight ? "text-success" : "text-white"}`}>
+        <div className={`font-mono text-[20px] font-extrabold tracking-tight ${highlight ? "text-success" : "text-text-1"}`}>
           {value}
         </div>
       </div>

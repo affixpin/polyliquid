@@ -11,7 +11,7 @@ export function Problems() {
     <section className="bg-[var(--navy-alt)]">
       <div className="max-w-[1140px] mx-auto px-8 py-16">
         <div className="font-mono text-[11px] font-semibold text-brand-bright uppercase tracking-wide mb-2">The Problem</div>
-        <h2 className="text-[36px] font-bold tracking-tight text-white leading-tight mb-2">
+        <h2 className="text-[36px] font-bold tracking-tight text-text-1 leading-tight mb-2">
           Oracles are the weakest link
         </h2>
         <p className="text-[15px] text-text-2 max-w-[460px] mb-9">
@@ -26,7 +26,7 @@ export function Problems() {
                 <span className="font-mono text-[10px] font-semibold text-danger bg-danger/10 px-2 py-0.5 rounded inline-block mb-3 uppercase tracking-wide">
                   {p.tag}
                 </span>
-                <div className="font-mono text-[28px] font-extrabold text-white tracking-tight mb-1.5">
+                <div className="font-mono text-[28px] font-extrabold text-text-1 tracking-tight mb-1.5">
                   {p.value}
                 </div>
                 <p className="text-[13px] text-text-3 leading-relaxed">{p.desc}</p>

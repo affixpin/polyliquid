@@ -6,7 +6,7 @@ export function TheSplit() {
       <div className="font-mono text-[11px] font-semibold text-brand-bright uppercase tracking-wide mb-2">
         Security Comparison
       </div>
-      <h2 className="text-[36px] font-bold tracking-tight text-white leading-tight mb-2">
+      <h2 className="text-[36px] font-bold tracking-tight text-text-1 leading-tight mb-2">
         Why 14,700&times; safer
       </h2>
       <p className="text-[15px] text-text-2 max-w-[480px] mb-9">
@@ -62,7 +62,7 @@ export function TheSplit() {
         <CardContent className="px-6 py-4 flex items-center justify-between">
           <div>
             <div className="text-[14px] font-medium text-text-1">
-              R1 layer protects up to <strong className="text-white">$11M</strong> in TVL
+              R1 layer protects up to <strong className="text-text-1">$11M</strong> in TVL
             </div>
             <div className="text-[13px] text-text-3">
               If that's not enough, DAO dispute makes the cost of attack infinite.

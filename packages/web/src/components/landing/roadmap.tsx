@@ -11,7 +11,7 @@ export function Roadmap() {
   return (
     <section className="max-w-[1140px] mx-auto px-8 py-16">
       <div className="font-mono text-[11px] font-semibold text-brand-bright uppercase tracking-wide mb-2">Roadmap</div>
-      <h2 className="text-[36px] font-bold tracking-tight text-white leading-tight mb-2">
+      <h2 className="text-[36px] font-bold tracking-tight text-text-1 leading-tight mb-2">
         Four phases
       </h2>
       <p className="text-[15px] text-text-2 max-w-[460px] mb-9">
@@ -20,7 +20,7 @@ export function Roadmap() {
 
       <div className="grid grid-cols-4 gap-3">
         {phases.map((p) => (
-          <Card key={p.q} className="group bg-surface border-border hover:border-[#3c3936] hover:-translate-y-0.5 transition-all relative overflow-hidden py-0">
+          <Card key={p.q} className="group bg-surface border-border hover:border-border-bright hover:-translate-y-0.5 transition-all relative overflow-hidden py-0">
             {p.current && (
               <div className="absolute top-[-1px] left-[-1px] right-[-1px] h-[3px] rounded-t-[10px] bg-gradient-to-r from-brand to-success" />
             )}
@@ -28,7 +28,7 @@ export function Roadmap() {
               <div className="font-mono text-[10px] font-semibold text-brand-bright tracking-wide mb-2">
                 {p.q}
               </div>
-              <h3 className="text-[17px] font-bold text-white mb-1">{p.title}</h3>
+              <h3 className="text-[17px] font-bold text-text-1 mb-1">{p.title}</h3>
               <p className="text-[12px] text-text-3 leading-relaxed">{p.desc}</p>
             </CardContent>
           </Card>

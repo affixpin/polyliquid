@@ -4,14 +4,14 @@ const tiers = [
   { name: "Elite", count: 10, pct: 30, width: "88%", color: "from-[#b8860b] to-brand-bright", nameColor: "text-brand-bright" },
   { name: "Top", count: 40, pct: 30, width: "88%", color: "from-[#1a9a7a] to-success", nameColor: "text-success" },
   { name: "Medium", count: 150, pct: 34, width: "100%", color: "from-[#b07830] to-amber", nameColor: "text-amber" },
-  { name: "Newcomer", count: 800, pct: 6, width: "18%", color: "from-white/12 to-white/12", nameColor: "text-text-3" },
+  { name: "Newcomer", count: 800, pct: 6, width: "18%", color: "from-text-3/30 to-text-3/30", nameColor: "text-text-3" },
 ];
 
 export function PowerDistribution() {
   return (
     <section className="max-w-[1140px] mx-auto px-8 py-16">
       <div className="font-mono text-[11px] font-semibold text-brand-bright uppercase tracking-wide mb-2">Power Distribution</div>
-      <h2 className="text-[36px] font-bold tracking-tight text-white leading-tight mb-2">
+      <h2 className="text-[36px] font-bold tracking-tight text-text-1 leading-tight mb-2">
         No single group dominates
       </h2>
       <p className="text-[15px] text-text-2 max-w-[460px] mb-9">
@@ -30,7 +30,7 @@ export function PowerDistribution() {
                 style={{ width: t.width }}
               />
             </div>
-            <span className="font-mono text-[14px] font-bold text-white text-right">{t.pct}%</span>
+            <span className="font-mono text-[14px] font-bold text-text-1 text-right">{t.pct}%</span>
           </div>
         ))}
       </div>
@@ -46,12 +46,12 @@ export function PowerDistribution() {
               </span>
             </div>
             <span className="text-[13px] text-text-2">
-              A whale deposits <strong className="text-white font-semibold">$10,000,000</strong> with zero reputation.
+              A whale deposits <strong className="text-text-1 font-semibold">$10,000,000</strong> with zero reputation.
             </span>
             <span className="font-mono text-[12px] text-text-3 ml-auto">
               W = <span className="text-danger">$10M</span> &times; 0 rep = <span className="text-danger">0</span>
             </span>
-            <span className="font-mono text-[24px] font-extrabold text-white tracking-tight shrink-0">
+            <span className="font-mono text-[24px] font-extrabold text-text-1 tracking-tight shrink-0">
               0%
             </span>
             <span className="font-mono text-[10px] text-danger uppercase tracking-wide shrink-0">
