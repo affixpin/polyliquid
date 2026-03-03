@@ -1,4 +1,5 @@
 import { NavLink } from "react-router";
+import { Button } from "@/components/ui/button";
 
 export function Nav() {
   const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -21,7 +22,9 @@ export function Nav() {
         <NavLink to="/activity" className={linkClass}>Activity</NavLink>
       </div>
 
-      <div />
+      <Button className="bg-brand hover:bg-brand/90 text-white text-[12px] font-semibold h-8 px-4 shadow-[0_2px_8px_rgba(229,168,35,.12)] transition-all cursor-pointer">
+        Connect Wallet
+      </Button>
     </nav>
   );
 }

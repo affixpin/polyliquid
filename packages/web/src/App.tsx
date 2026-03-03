@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { Nav } from "@/components/landing/nav";
 import { HomePage } from "@/pages/home";
 import { VaultsPage } from "@/pages/vaults";
+import { VaultDetailPage } from "@/pages/vault-detail";
 import { ActivityPage } from "@/pages/activity";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/vaults" element={<VaultsPage />} />
+          <Route path="/vaults/:id" element={<VaultDetailPage />} />
           <Route path="/activity" element={<ActivityPage />} />
         </Routes>
       </div>
