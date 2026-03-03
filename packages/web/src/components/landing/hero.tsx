@@ -38,7 +38,7 @@ export function Hero() {
             </div>
             <div className="text-[16px] text-text-3 pb-1 md:pb-2">vs</div>
             <div>
-              <div className="font-mono text-[30px] md:text-[40px] font-extrabold text-text-1 tracking-tight leading-none">$∞</div>
+              <div className="font-mono text-[26px] md:text-[34px] font-extrabold text-success tracking-tight leading-none whitespace-nowrap">Infinite $</div>
               <div className="text-[12px] text-text-3 mt-2">Polyliquid</div>
             </div>
           </div>
@@ -46,8 +46,8 @@ export function Hero() {
 
         <div className="px-5 md:px-8 py-4 md:py-6 bg-brand/8 flex justify-between items-center">
           <span className="text-[13px] md:text-[14px] font-medium text-text-2">Safety multiplier</span>
-          <span className="font-mono text-[32px] md:text-[44px] font-extrabold tracking-tight bg-gradient-to-br from-brand-bright to-success bg-clip-text text-transparent">
-            14,700&times;
+          <span className="font-mono text-[32px] md:text-[44px] font-extrabold tracking-tight text-brand-bright">
+            &times;&infin;
           </span>
         </div>
       </div>

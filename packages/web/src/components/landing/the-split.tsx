@@ -7,7 +7,7 @@ export function TheSplit() {
         Security Comparison
       </div>
       <h2 className="text-[28px] md:text-[36px] font-bold tracking-tight text-text-1 leading-tight mb-2">
-        Why 14,700&times; safer
+        Why &times;&infin; safer
       </h2>
       <p className="text-[15px] text-text-2 max-w-[480px] mb-9">
         UMA lets anyone buy influence instantly. Polyliquid requires months of proven accuracy.
@@ -50,7 +50,7 @@ export function TheSplit() {
               <CompRow label="Influence model" poly="Stake &times; Reputation" />
               <CompRow label="Attack method" poly="Impossible without reputation" />
               <CompRow label="Time to influence" poly="Months of correct votes" />
-              <CompRow label="Attack cost" poly="$∞ + years of history" highlight />
+              <CompRow label="Attack cost" poly="Infinite $" highlight />
               <CompRow label="Consequence" poly="Lose all stake + reputation" />
             </div>
           </CardContent>
@@ -68,8 +68,8 @@ export function TheSplit() {
               If that's not enough, DAO dispute makes the cost of attack infinite.
             </div>
           </div>
-          <div className="font-mono text-[32px] md:text-[36px] font-extrabold tracking-tight bg-gradient-to-br from-brand-bright to-success bg-clip-text text-transparent shrink-0">
-            14,700&times;
+          <div className="font-mono text-[32px] md:text-[36px] font-extrabold tracking-tight text-brand-bright shrink-0">
+            &times;&infin;
           </div>
         </CardContent>
       </Card>
