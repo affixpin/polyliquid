@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=1280">
 <title>Polyliquid — Pitch Deck</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
   :root {
     --bg: #0c0a08;
@@ -260,22 +260,29 @@
 <!-- ════════════ SLIDE 1 — TITLE ════════════ -->
 <div class="slide" id="slide-1">
   <div class="top-line"></div>
-  <!-- Decorative corner glows -->
   <div style="position:absolute;top:-120px;right:-120px;width:400px;height:400px;background:radial-gradient(circle,rgba(229,168,35,0.06) 0%,transparent 70%);pointer-events:none;"></div>
   <div style="position:absolute;bottom:-120px;left:-120px;width:400px;height:400px;background:radial-gradient(circle,rgba(45,212,168,0.04) 0%,transparent 70%);pointer-events:none;"></div>
   <div class="s-inner centered col g20">
-    <div class="mono" style="font-size:12px;font-weight:600;color:var(--gold);letter-spacing:0.18em;text-transform:uppercase;">Investment Presentation</div>
-    <div style="font-size:72px;font-weight:700;letter-spacing:-0.04em;line-height:1;">POLY<span class="grad">LIQUID</span></div>
+    <div class="mono" style="font-size:12px;font-weight:600;color:var(--gold);letter-spacing:0.18em;text-transform:uppercase;">Oracle Proposal for Limitless</div>
+    <!-- Logo + Brand -->
+    <div style="display:flex;align-items:center;gap:16px;">
+      <svg width="48" height="48" viewBox="0 0 50 50" fill="none" stroke="currentColor" stroke-width="3" style="color:var(--text-1);">
+        <line x1="0" y1="0" x2="10" y2="10"/>
+        <line x1="0" y1="15" x2="8" y2="15"/>
+        <line x1="0" y1="30" x2="10" y2="20"/>
+        <circle cx="15" cy="15" r="5" fill="currentColor" stroke="none"/>
+        <line x1="22" y1="15" x2="32" y2="15"/>
+        <path d="M29,10 L32,15 L29,20"/>
+      </svg>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:64px;font-weight:600;letter-spacing:-0.03em;color:var(--text-1);line-height:1;">polyliquid</div>
+      <span class="mono" style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;background:rgba(229,168,35,0.12);color:var(--gold-bright);padding:4px 8px;border-radius:4px;">BETA</span>
+    </div>
     <div style="font-size:20px;color:var(--teal);font-weight:500;margin-top:-2px;">Decentralized Delegated Reputation Oracle</div>
     <div style="width:40px;height:2px;background:var(--gold);border-radius:1px;margin:16px 0 8px;"></div>
     <div class="row g20 center">
       <span style="font-size:15px;color:var(--text-3);">polyliquid.ai</span>
       <span style="color:var(--dim);">·</span>
       <span style="font-size:15px;color:var(--text-3);">March 2026</span>
-    </div>
-    <div class="row g8" style="margin-top:4px;">
-      <span class="badge badge-gold">beta</span>
-      <span class="badge badge-teal">Pitch Deck</span>
     </div>
   </div>
 </div>
@@ -324,7 +331,7 @@
     </div>
 
     <div class="callout" style="margin-top:20px;text-align:center;">
-      <span class="mono" style="font-size:20px;font-weight:800;">14,700×</span> more expensive to attack Polyliquid
+      <span class="mono" style="font-size:20px;font-weight:800;">∞</span> more expensive to attack Polyliquid
     </div>
   </div>
 </div>
@@ -916,7 +923,7 @@
     <div class="row g12" style="margin-top:8px;">
       <span class="badge badge-teal" style="font-size:13px;padding:6px 14px;">$11M attack cost</span>
       <span class="badge badge-red" style="font-size:13px;padding:6px 14px;">$750 for UMA</span>
-      <span class="badge badge-gold" style="font-size:13px;padding:6px 14px;">14,700× difference</span>
+      <span class="badge badge-gold" style="font-size:13px;padding:6px 14px;">∞× difference</span>
     </div>
   </div>
 </div>
