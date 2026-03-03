@@ -1,0 +1,8 @@
+node_modules/
+src/
+public/
+*.md
+*.log
+.vscode/
+.idea/
+.DS_Store

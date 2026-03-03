@@ -1,0 +1,44 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies & build
+        working-directory: packages/web
+        run: |
+          npm install
+          npm run build
+
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/43392658019/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+          service_account: github-deploy@polyliquid.iam.gserviceaccount.com
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy to Cloud Run
+        working-directory: packages/web
+        run: |
+          gcloud run deploy polyliquid-web \
+            --source . \
+            --project polyliquid \
+            --region us-central1 \
+            --allow-unauthenticated \
+            --port 8080 \
+            --memory 256Mi \
+            --quiet
