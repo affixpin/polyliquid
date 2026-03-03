@@ -32,13 +32,13 @@ const voters = [
 
 export function VaultsPage() {
   return (
-    <div className="pt-[76px] pb-16 px-8 max-w-[1140px] mx-auto">
+    <div className="pt-[76px] pb-16 px-4 md:px-8 max-w-[1140px] mx-auto">
       {/* Header */}
       <div className="mb-8">
         <div className="font-mono text-[11px] font-semibold text-brand-bright uppercase tracking-wide mb-2">
           Voter Vaults
         </div>
-        <h1 className="text-[36px] font-bold tracking-tight text-text-1 leading-tight mb-2">
+        <h1 className="text-[28px] md:text-[36px] font-bold tracking-tight text-text-1 leading-tight mb-2">
           Delegate &amp; earn
         </h1>
         <p className="text-[15px] text-text-2 max-w-[520px]">
@@ -47,14 +47,58 @@ export function VaultsPage() {
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
+      <div className="grid grid-cols-3 gap-2 md:gap-3 mb-6">
         <StatCard label="Total Voters" value="1,000" />
-        <StatCard label="Total Value Locked" value="$48.5M" color="text-success" />
-        <StatCard label="Avg. Accuracy" value="93.2%" color="text-success" />
+        <StatCard label="TVL" value="$48.5M" color="text-success" />
+        <StatCard label="Accuracy" value="93.2%" color="text-success" />
       </div>
 
-      {/* Vault table */}
-      <Card className="bg-surface border-border overflow-hidden py-0 gap-0">
+      {/* Mobile: card layout */}
+      <div className="flex flex-col gap-3 md:hidden">
+        {voters.map((v) => (
+          <Card key={v.id} className="bg-surface border-border py-0 gap-0">
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <div className="font-semibold text-[15px] text-text-1">{v.name}</div>
+                  <div className="font-mono text-[11px] text-text-3">{v.markets} markets</div>
+                </div>
+                <span className={`font-mono text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded ${tierStyles[v.tier]}`}>
+                  {v.tier}
+                </span>
+              </div>
+              <div className="grid grid-cols-3 gap-3 mb-3">
+                <div>
+                  <div className="font-mono text-[10px] text-dim uppercase tracking-wide mb-0.5">TVL</div>
+                  <div className="font-mono text-[14px] text-text-1 font-medium">{v.tvl}</div>
+                </div>
+                <div>
+                  <div className="font-mono text-[10px] text-dim uppercase tracking-wide mb-0.5">APR</div>
+                  <div className="font-mono text-[14px] text-success font-medium">{v.apr}</div>
+                </div>
+                <div>
+                  <div className="font-mono text-[10px] text-dim uppercase tracking-wide mb-0.5">Slash</div>
+                  <div className="font-mono text-[14px] text-text-2 font-medium">{v.slash}</div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-mono text-[12px] text-text-1">{v.rep}</span>
+                  <div className="w-10 h-1 rounded-full bg-border">
+                    <div className={`h-full rounded-full ${repBarColor[v.tier]}`} style={{ width: `${v.repW}%` }} />
+                  </div>
+                </div>
+                <Button asChild size="sm" className="bg-brand hover:bg-brand/90 text-text-1 text-[11px] font-semibold h-7 px-3 shadow-[0_2px_8px_var(--pl-brand-glow-sm)] transition-all">
+                  <Link to={`/vaults/${v.id}`}>Deposit</Link>
+                </Button>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Desktop: table layout */}
+      <Card className="hidden md:block bg-surface border-border overflow-hidden py-0 gap-0">
         <div className="flex items-center justify-between px-5 py-3 border-b border-border">
           <span className="text-[14px] font-semibold text-text-1">All Vaults</span>
           <div className="flex gap-1">
@@ -135,9 +179,9 @@ export function VaultsPage() {
 function StatCard({ label, value, color = "text-text-1" }: { label: string; value: string; color?: string }) {
   return (
     <Card className="bg-surface border-border py-0 gap-0">
-      <div className="p-4">
-        <div className="font-mono text-[10px] font-semibold text-dim uppercase tracking-wide mb-1">{label}</div>
-        <div className={`font-mono text-[22px] font-extrabold tracking-tight ${color}`}>{value}</div>
+      <div className="p-3 md:p-4">
+        <div className="font-mono text-[9px] md:text-[10px] font-semibold text-dim uppercase tracking-wide mb-1">{label}</div>
+        <div className={`font-mono text-[18px] md:text-[22px] font-extrabold tracking-tight ${color}`}>{value}</div>
       </div>
     </Card>
   );

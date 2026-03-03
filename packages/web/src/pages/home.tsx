@@ -14,16 +14,16 @@ export function HomePage() {
       <Hero />
       <TheSplit />
       <Problems />
-      <div className="max-w-[1140px] mx-auto px-8">
+      <div className="max-w-[1140px] mx-auto px-4 md:px-8">
         <Separator className="bg-border" />
       </div>
       <HowItWorks />
-      <div className="max-w-[1140px] mx-auto px-8">
+      <div className="max-w-[1140px] mx-auto px-4 md:px-8">
         <Separator className="bg-border" />
       </div>
       <PowerDistribution />
       <Economics />
-      <div className="max-w-[1140px] mx-auto px-8">
+      <div className="max-w-[1140px] mx-auto px-4 md:px-8">
         <Separator className="bg-border" />
       </div>
       <Roadmap />

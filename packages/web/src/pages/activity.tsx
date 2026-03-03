@@ -67,9 +67,9 @@ const events = [
     time: "15 min ago",
     market: "Will Bitcoin ETF inflows exceed $10B in March?",
     status: "Voting",
-    outcome: "—",
+    outcome: "\u2014",
     voters: 8,
-    consensus: "—",
+    consensus: "\u2014",
     volume: "$890K",
     breakdown: [
       { name: "Apex Oracle", tier: "Elite", weight: 24, vote: "Yes" },
@@ -161,13 +161,13 @@ export function ActivityPage() {
   const disputed = events.filter((e) => e.status === "Disputed").length;
 
   return (
-    <div className="pt-[76px] pb-16 px-8 max-w-[1140px] mx-auto">
+    <div className="pt-[76px] pb-16 px-4 md:px-8 max-w-[1140px] mx-auto">
       {/* Header */}
       <div className="mb-8">
         <div className="font-mono text-[11px] font-semibold text-brand-bright uppercase tracking-wide mb-2">
           Activity Feed
         </div>
-        <h1 className="text-[36px] font-bold tracking-tight text-text-1 leading-tight mb-2">
+        <h1 className="text-[28px] md:text-[36px] font-bold tracking-tight text-text-1 leading-tight mb-2">
           Resolution timeline
         </h1>
         <p className="text-[15px] text-text-2 max-w-[520px]">
@@ -176,7 +176,7 @@ export function ActivityPage() {
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-4 gap-3 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 mb-6">
         <StatCard label="Resolved" value={String(resolved)} color="text-success" />
         <StatCard label="In Voting" value={String(voting)} color="text-brand-bright" />
         <StatCard label="Disputed" value={String(disputed)} color="text-danger" />
@@ -199,8 +199,8 @@ export function ActivityPage() {
               onClick={() => setExpanded(isOpen ? null : i)}
             >
               <CardContent className="p-0">
-                {/* Summary row */}
-                <div className="grid grid-cols-[100px_1fr_90px_80px_80px_32px] gap-4 items-center px-5 py-3.5">
+                {/* Summary row — desktop */}
+                <div className="hidden md:grid grid-cols-[100px_1fr_90px_80px_80px_32px] gap-4 items-center px-5 py-3.5">
                   <span className="font-mono text-[11px] text-text-3">{e.time}</span>
                   <div>
                     <div className="text-[14px] font-medium text-text-1 leading-snug">{e.market}</div>
@@ -230,14 +230,45 @@ export function ActivityPage() {
                   </svg>
                 </div>
 
+                {/* Summary row — mobile */}
+                <div className="md:hidden px-4 py-3">
+                  <div className="flex items-start justify-between gap-2 mb-1.5">
+                    <div className="text-[14px] font-medium text-text-1 leading-snug flex-1">{e.market}</div>
+                    <svg
+                      className={`w-4 h-4 text-text-3 transition-transform duration-200 shrink-0 mt-0.5 ${isOpen ? "rotate-180" : ""}`}
+                      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-mono text-[11px] text-text-3">{e.time}</span>
+                    <span className={`font-mono text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded ${statusStyles[e.status]}`}>
+                      {e.status}
+                    </span>
+                    <span className={`font-mono text-[12px] font-bold ${
+                      e.outcome === "Yes" ? "text-success" :
+                      e.outcome === "No" ? "text-danger" :
+                      e.outcome.includes("Challenged") ? "text-amber" :
+                      "text-text-3"
+                    }`}>
+                      {e.outcome}
+                    </span>
+                    {e.consensus !== "\u2014" && (
+                      <span className="font-mono text-[12px] font-bold text-text-1">{e.consensus}</span>
+                    )}
+                    <span className="font-mono text-[11px] text-text-3">{e.voters} voters</span>
+                  </div>
+                </div>
+
                 {/* Expanded breakdown */}
                 {isOpen && (
-                  <div className="border-t border-border px-5 py-4">
+                  <div className="border-t border-border px-4 md:px-5 py-4">
                     {/* Vote split bar */}
                     <div className="mb-4">
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-mono text-[11px] font-semibold text-success">Yes {yesPct}%</span>
-                        <span className="font-mono text-[11px] text-text-3">Voting power distribution</span>
+                        <span className="font-mono text-[11px] text-text-3 hidden sm:inline">Voting power distribution</span>
                         <span className="font-mono text-[11px] font-semibold text-danger">No {noPct}%</span>
                       </div>
                       <div className="flex h-2 rounded-full overflow-hidden gap-0.5">
@@ -247,16 +278,16 @@ export function ActivityPage() {
                     </div>
 
                     {/* Voter table */}
-                    <div className="grid grid-cols-2 gap-x-6 gap-y-0">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-0">
                       {e.breakdown.map((v) => {
                         const pct = Math.round((v.weight / totalWeight) * 100);
                         return (
-                          <div key={v.name} className="flex items-center gap-3 py-1.5 border-b border-border/50 last:border-0">
-                            <span className="text-[13px] text-text-1 w-[140px] truncate">{v.name}</span>
+                          <div key={v.name} className="flex items-center gap-2 md:gap-3 py-1.5 border-b border-border/50 last:border-0">
+                            <span className="text-[12px] md:text-[13px] text-text-1 w-[100px] md:w-[140px] truncate">{v.name}</span>
                             <span className={`font-mono text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded shrink-0 ${tierStyles[v.tier]}`}>
                               {v.tier}
                             </span>
-                            <div className="flex-1 h-1.5 rounded-full bg-border mx-1">
+                            <div className="flex-1 h-1.5 rounded-full bg-border mx-1 hidden sm:block">
                               <div
                                 className={`h-full rounded-full ${v.vote === "Yes" ? "bg-success" : "bg-danger"}`}
                                 style={{ width: `${pct}%` }}
@@ -284,9 +315,9 @@ export function ActivityPage() {
 function StatCard({ label, value, color = "text-text-1" }: { label: string; value: string; color?: string }) {
   return (
     <Card className="bg-surface border-border py-0 gap-0">
-      <div className="p-4">
-        <div className="font-mono text-[10px] font-semibold text-dim uppercase tracking-wide mb-1">{label}</div>
-        <div className={`font-mono text-[22px] font-extrabold tracking-tight ${color}`}>{value}</div>
+      <div className="p-3 md:p-4">
+        <div className="font-mono text-[9px] md:text-[10px] font-semibold text-dim uppercase tracking-wide mb-1">{label}</div>
+        <div className={`font-mono text-[18px] md:text-[22px] font-extrabold tracking-tight ${color}`}>{value}</div>
       </div>
     </Card>
   );

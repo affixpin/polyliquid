@@ -9,20 +9,20 @@ const problems = [
 export function Problems() {
   return (
     <section className="bg-[var(--navy-alt)]">
-      <div className="max-w-[1140px] mx-auto px-8 py-16">
+      <div className="max-w-[1140px] mx-auto px-4 md:px-8 py-12 md:py-16">
         <div className="font-mono text-[11px] font-semibold text-brand-bright uppercase tracking-wide mb-2">The Problem</div>
-        <h2 className="text-[36px] font-bold tracking-tight text-text-1 leading-tight mb-2">
+        <h2 className="text-[28px] md:text-[36px] font-bold tracking-tight text-text-1 leading-tight mb-2">
           Oracles are the weakest link
         </h2>
         <p className="text-[15px] text-text-2 max-w-[460px] mb-9">
           UMA uses token-weighted voting. Influence is purchased, not earned.
         </p>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {problems.map((p) => (
             <Card key={p.tag} className="group bg-surface border-border hover:border-danger/20 transition-all overflow-hidden relative py-0">
               <div className="absolute top-0 left-0 right-0 h-0.5 bg-danger scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" />
-              <CardContent className="p-6">
+              <CardContent className="p-5 md:p-6">
                 <span className="font-mono text-[10px] font-semibold text-danger bg-danger/10 px-2 py-0.5 rounded inline-block mb-3 uppercase tracking-wide">
                   {p.tag}
                 </span>

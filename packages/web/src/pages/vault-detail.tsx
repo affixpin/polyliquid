@@ -71,7 +71,7 @@ export function VaultDetailPage() {
 
   if (!vault) {
     return (
-      <div className="pt-[100px] px-8 max-w-[1140px] mx-auto text-center">
+      <div className="pt-[100px] px-4 md:px-8 max-w-[1140px] mx-auto text-center">
         <p className="text-text-2">Vault not found.</p>
         <Link to="/vaults" className="text-brand-bright text-[14px] mt-2 inline-block">Back to vaults</Link>
       </div>
@@ -86,7 +86,7 @@ export function VaultDetailPage() {
   };
 
   return (
-    <div className="pt-[76px] pb-16 px-8 max-w-[1140px] mx-auto">
+    <div className="pt-[76px] pb-16 px-4 md:px-8 max-w-[1140px] mx-auto">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 mb-6 font-mono text-[12px]">
         <Link to="/vaults" className="text-text-3 hover:text-text-2 transition-colors">Vaults</Link>
@@ -94,24 +94,24 @@ export function VaultDetailPage() {
         <span className="text-text-1">{vault.name}</span>
       </div>
 
-      <div className="grid grid-cols-[1fr_380px] gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 items-start">
         {/* Left column */}
         <div className="flex flex-col gap-5">
           {/* Vault header */}
           <div>
-            <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-[32px] font-bold tracking-tight text-text-1">{vault.name}</h1>
+            <div className="flex items-center gap-3 mb-2 flex-wrap">
+              <h1 className="text-[26px] md:text-[32px] font-bold tracking-tight text-text-1">{vault.name}</h1>
               <span className={`font-mono text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded ${tierStyles[vault.tier]}`}>
                 {vault.tier}
               </span>
             </div>
-            <p className="text-[14px] text-text-3">
+            <p className="text-[13px] md:text-[14px] text-text-3">
               {vault.markets} markets resolved &middot; {vault.depositors} depositors &middot; {vault.weeklyVolume} weekly volume
             </p>
           </div>
 
           {/* Key metrics */}
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <MetricCard label="APR" value={vault.apr} highlight />
             <MetricCard label="Total Deposited" value={vault.tvl} />
             <MetricCard label="Reputation" value={vault.rep} />
@@ -121,7 +121,7 @@ export function VaultDetailPage() {
           {/* Vault details */}
           <Card className="bg-surface border-border py-0 gap-0">
             <CardContent className="p-0">
-              <div className="px-5 py-3 border-b border-border">
+              <div className="px-4 md:px-5 py-3 border-b border-border">
                 <span className="text-[14px] font-semibold text-text-1">Vault details</span>
               </div>
               <div className="divide-y divide-border">
@@ -144,26 +144,37 @@ export function VaultDetailPage() {
           {/* Vault activity */}
           <Card className="bg-surface border-border py-0 gap-0">
             <CardContent className="p-0">
-              <div className="px-5 py-3 border-b border-border">
+              <div className="px-4 md:px-5 py-3 border-b border-border">
                 <span className="text-[14px] font-semibold text-text-1">Recent activity</span>
               </div>
               <div className="divide-y divide-border">
                 {vault.activity.map((a, i) => (
-                  <div key={i} className="flex items-center gap-4 px-5 py-3">
-                    <span className="font-mono text-[11px] text-text-3 w-[80px] shrink-0">{a.time}</span>
-                    <span className={`font-mono text-[11px] font-semibold uppercase tracking-wide w-[80px] shrink-0 ${actionStyles[a.action]}`}>
-                      {a.action}
-                    </span>
-                    <span className="text-[13px] text-text-2 truncate flex-1">
-                      {a.market || "—"}
-                    </span>
-                    <span className={`font-mono text-[13px] font-medium shrink-0 ${
-                      a.amount.startsWith("+") ? "text-success" :
-                      a.amount.startsWith("-") ? "text-danger" :
-                      "text-text-1"
-                    }`}>
-                      {a.amount}
-                    </span>
+                  <div key={i} className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4 px-4 md:px-5 py-3">
+                    <div className="flex items-center gap-3 md:contents">
+                      <span className="font-mono text-[11px] text-text-3 w-[70px] md:w-[80px] shrink-0">{a.time}</span>
+                      <span className={`font-mono text-[11px] font-semibold uppercase tracking-wide w-[70px] md:w-[80px] shrink-0 ${actionStyles[a.action]}`}>
+                        {a.action}
+                      </span>
+                      <span className={`font-mono text-[13px] font-medium shrink-0 md:hidden ${
+                        a.amount.startsWith("+") ? "text-success" :
+                        a.amount.startsWith("-") ? "text-danger" :
+                        "text-text-1"
+                      }`}>
+                        {a.amount}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between md:contents flex-1 min-w-0">
+                      <span className="text-[13px] text-text-2 truncate flex-1">
+                        {a.market || "\u2014"}
+                      </span>
+                      <span className={`font-mono text-[13px] font-medium shrink-0 hidden md:inline ${
+                        a.amount.startsWith("+") ? "text-success" :
+                        a.amount.startsWith("-") ? "text-danger" :
+                        "text-text-1"
+                      }`}>
+                        {a.amount}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -172,7 +183,7 @@ export function VaultDetailPage() {
         </div>
 
         {/* Right column — sticky deposit/withdraw */}
-        <div className="sticky top-[76px]">
+        <div className="lg:sticky lg:top-[76px]">
           <Card className="bg-surface border-border py-0 gap-0">
             <CardContent className="p-0">
               {/* Tabs */}
@@ -199,7 +210,7 @@ export function VaultDetailPage() {
                 </button>
               </div>
 
-              <div className="p-5">
+              <div className="p-4 md:p-5">
                 {/* Currency + balance */}
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
@@ -281,9 +292,9 @@ export function VaultDetailPage() {
 function MetricCard({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
     <Card className="bg-surface border-border py-0 gap-0">
-      <div className="p-4">
+      <div className="p-3 md:p-4">
         <div className="font-mono text-[10px] font-semibold text-dim uppercase tracking-wide mb-1">{label}</div>
-        <div className={`font-mono text-[20px] font-extrabold tracking-tight ${highlight ? "text-success" : "text-text-1"}`}>
+        <div className={`font-mono text-[18px] md:text-[20px] font-extrabold tracking-tight ${highlight ? "text-success" : "text-text-1"}`}>
           {value}
         </div>
       </div>
@@ -293,7 +304,7 @@ function MetricCard({ label, value, highlight }: { label: string; value: string;
 
 function DetailRow({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="flex justify-between items-center px-5 py-3 text-[13px]">
+    <div className="flex justify-between items-center px-4 md:px-5 py-3 text-[13px]">
       <span className="text-text-3">{label}</span>
       <span className="text-text-1 font-mono font-medium">{value}</span>
     </div>
