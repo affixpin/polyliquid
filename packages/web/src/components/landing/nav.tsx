@@ -23,7 +23,7 @@ export function Nav() {
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 md:px-8 h-13 bg-[var(--navy)]/85 backdrop-blur-xl border-b border-border">
         <div className="flex items-center gap-2.5">
-          <NavLink to="/" className="flex items-center gap-1.5 font-mono text-[13px] font-bold text-text-1 no-underline">
+          <NavLink to="/" className="flex items-center gap-1.5 text-[14px] font-semibold text-text-1 no-underline" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
             <Logo size={22} />
             polyliquid
           </NavLink>

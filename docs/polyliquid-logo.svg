@@ -9,5 +9,5 @@
     <path d="M29 10 L32 15 L29 20"/>
   </g>
   <!-- Wordmark -->
-  <text x="50" y="35" font-family="monospace" font-size="24" fill="currentColor">polyliquid</text>
+  <text x="50" y="35" font-family="'Space Grotesk', sans-serif" font-weight="600" font-size="24" fill="currentColor">polyliquid</text>
 </svg>
