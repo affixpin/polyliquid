@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polyliquid — Slate + Nova</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --base: #0c0f14;
+    --surface: #12161d;
+    --surface2: #1a1f29;
+    --border: #222833;
+    --border-light: #2d3440;
+    --text: #e8ecf4;
+    --muted: #6b7a90;
+    --nova: #10b981;
+    --nova-dim: rgba(16, 185, 129, 0.08);
+    --nova-mid: rgba(16, 185, 129, 0.2);
+    --nova-bright: #34d399;
+    --danger: #f43f5e;
+    --danger-dim: rgba(244, 63, 94, 0.1);
+    --warn: #f59e0b;
+    --font: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--base);
+    color: var(--text);
+    font-family: var(--font);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px; height: 64px;
+    background: rgba(12, 15, 20, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-brand {
+    font-size: 18px; font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+  .nav-brand span { color: var(--nova); }
+  .nav-links { display: flex; gap: 8px; }
+  .nav-links a {
+    font-size: 13px; color: var(--muted);
+    text-decoration: none; font-weight: 500;
+    padding: 6px 14px; border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); background: var(--surface2); }
+  .nav-links a.active { color: var(--nova); background: var(--nova-dim); }
+
+  /* HERO */
+  .hero {
+    padding: 180px 48px 100px;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .hero-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+    align-items: center;
+  }
+  .hero-left {}
+  .hero-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 14px;
+    background: var(--nova-dim);
+    border: 1px solid var(--nova-mid);
+    border-radius: 100px;
+    font-size: 12px; font-weight: 600; color: var(--nova);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 28px;
+  }
+  .hero-chip .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--nova);
+  }
+  .hero h1 {
+    font-size: 48px; font-weight: 800;
+    line-height: 1.1; letter-spacing: -0.03em;
+    margin-bottom: 20px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--nova);
+  }
+  .hero-sub {
+    font-size: 16px; color: var(--muted);
+    line-height: 1.7; margin-bottom: 36px;
+  }
+  .hero-ctas { display: flex; gap: 12px; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px;
+    background: var(--nova);
+    color: var(--base); font-weight: 700; font-size: 13px;
+    border: none; border-radius: 8px; cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { background: var(--nova-bright); }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px;
+    background: var(--surface2);
+    color: var(--text); font-weight: 600; font-size: 13px;
+    border: 1px solid var(--border); border-radius: 8px;
+    cursor: pointer; text-decoration: none;
+    transition: border-color 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--border-light); }
+
+  /* HERO RIGHT — ATTACK COST CARD */
+  .attack-card {
+    padding: 36px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+  }
+  .attack-card .heading {
+    font-size: 12px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    font-weight: 600; margin-bottom: 24px;
+  }
+  .attack-row {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 16px;
+  }
+  .attack-label {
+    width: 80px; font-size: 13px; color: var(--muted);
+    font-weight: 500;
+  }
+  .attack-bar-track {
+    flex: 1; height: 40px;
+    background: var(--surface2);
+    border-radius: 8px; overflow: hidden;
+    position: relative;
+  }
+  .attack-bar-fill {
+    height: 100%; border-radius: 7px;
+    display: flex; align-items: center;
+    padding: 0 16px;
+    font-weight: 700; font-size: 15px;
+  }
+  .attack-bar-fill.uma {
+    width: 7%; min-width: 70px;
+    background: var(--danger-dim);
+    color: var(--danger);
+  }
+  .attack-bar-fill.poly {
+    width: 100%;
+    background: var(--nova-dim);
+    border: 1px solid var(--nova-mid);
+    color: var(--nova);
+  }
+  .attack-result {
+    display: flex; align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    padding: 16px;
+    background: var(--nova-dim);
+    border-radius: 10px;
+    border: 1px solid var(--nova-mid);
+  }
+  .attack-result .big {
+    font-size: 32px; font-weight: 800;
+    color: var(--nova); letter-spacing: -0.03em;
+  }
+  .attack-result .sub {
+    font-size: 13px; color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 100px 48px;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .section-label {
+    font-size: 12px; color: var(--nova);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 12px; font-weight: 600;
+  }
+  section h2 {
+    font-size: 36px; font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+  }
+  section .desc {
+    font-size: 15px; color: var(--muted);
+    max-width: 520px; margin-bottom: 48px;
+    line-height: 1.7;
+  }
+
+  .divider {
+    max-width: 1100px; margin: 0 auto;
+    border: none; border-top: 1px solid var(--border);
+  }
+
+  /* PROBLEM */
+  .problem-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    margin-bottom: 32px;
+  }
+  .p-card {
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .p-card .val {
+    font-size: 24px; font-weight: 800;
+    color: var(--danger); margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+  .p-card .lbl { font-size: 13px; color: var(--muted); }
+
+  /* STEPS */
+  .steps {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+  }
+  .step {
+    padding: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: border-color 0.2s;
+  }
+  .step:hover { border-color: var(--nova-mid); }
+  .step-badge {
+    display: inline-flex;
+    padding: 4px 10px; margin-bottom: 16px;
+    background: var(--nova-dim);
+    border-radius: 6px;
+    font-size: 11px; font-weight: 700; color: var(--nova);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .step h3 {
+    font-size: 18px; font-weight: 700;
+    margin-bottom: 8px; letter-spacing: -0.01em;
+  }
+  .step p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+  /* POWER */
+  .power-cols {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+    align-items: center;
+  }
+  .power-bars {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .pw-row {
+    display: grid; grid-template-columns: 90px 1fr 50px;
+    gap: 12px; align-items: center;
+  }
+  .pw-label {
+    font-size: 14px; font-weight: 600;
+  }
+  .pw-track {
+    height: 32px;
+    background: var(--surface);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .pw-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--nova-dim), var(--nova));
+    border-radius: 5px;
+    opacity: 0.8;
+  }
+  .pw-pct { font-weight: 700; text-align: right; font-size: 14px; }
+
+  .power-info {
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .pi-card {
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+  }
+  .pi-card strong { color: var(--nova); }
+  .pi-card .sub { color: var(--muted); margin-top: 4px; font-size: 13px; }
+  .pi-card.whale {
+    border-color: var(--danger);
+    background: var(--danger-dim);
+  }
+  .pi-card.whale strong { color: var(--danger); }
+
+  /* ECONOMICS TABLE */
+  .eco-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .eco-table {
+    width: 100%; border-collapse: collapse;
+  }
+  .eco-table th {
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--muted);
+    padding: 14px 20px; text-align: left;
+    font-weight: 600; border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .eco-table td {
+    padding: 16px 20px; font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .eco-table tr:last-child td { border-bottom: none; }
+  .eco-table .num { font-weight: 700; }
+  .tb {
+    display: inline-flex; padding: 3px 10px;
+    border-radius: 6px; font-size: 11px;
+    font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .tb-e { background: var(--nova-dim); color: var(--nova); }
+  .tb-t { background: rgba(99, 102, 241, 0.12); color: #818cf8; }
+  .tb-m { background: rgba(96, 165, 250, 0.1); color: #93c5fd; }
+  .tb-n { background: rgba(107, 122, 144, 0.15); color: var(--muted); }
+
+  /* VAULT PREVIEW */
+  .vault-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .vault-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  .vault-head h3 { font-size: 15px; font-weight: 700; }
+  .vf-group { display: flex; gap: 6px; }
+  .vf {
+    padding: 5px 12px; border-radius: 6px;
+    font-size: 12px; font-weight: 600;
+    border: 1px solid var(--border);
+    background: transparent; color: var(--muted);
+    cursor: pointer;
+  }
+  .vf.on {
+    border-color: var(--nova);
+    color: var(--nova);
+    background: var(--nova-dim);
+  }
+  .vtable {
+    width: 100%; border-collapse: collapse;
+  }
+  .vtable th {
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--muted);
+    padding: 10px 20px; text-align: left;
+    font-weight: 600; border-bottom: 1px solid var(--border);
+  }
+  .vtable td {
+    padding: 14px 20px; font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .vtable tr:last-child td { border-bottom: none; }
+  .vtable tr:hover td { background: var(--surface2); }
+  .vt-name {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .vt-av {
+    width: 34px; height: 34px; border-radius: 8px;
+    background: var(--surface2); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: var(--muted);
+  }
+  .vt-primary { font-weight: 600; }
+  .vt-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .rep-bar { display: flex; align-items: center; gap: 8px; }
+  .rep-track {
+    width: 64px; height: 4px;
+    background: var(--border); border-radius: 2px;
+    overflow: hidden;
+  }
+  .rep-fill {
+    height: 100%; border-radius: 2px;
+    background: var(--nova);
+  }
+  .mono { font-variant-numeric: tabular-nums; }
+  .green { color: var(--nova-bright); }
+  .right { text-align: right; }
+
+  /* ROADMAP */
+  .rm-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  }
+  .rm-card {
+    padding: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .rm-card:hover { border-color: var(--nova-mid); }
+  .rm-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--nova);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .rm-card:hover::before { opacity: 1; }
+  .rm-q {
+    font-size: 11px; color: var(--nova);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    font-weight: 700; margin-bottom: 10px;
+  }
+  .rm-card h3 {
+    font-size: 16px; font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .rm-card p {
+    font-size: 13px; color: var(--muted); line-height: 1.6;
+  }
+
+  /* FOOTER */
+  .cta-section {
+    text-align: center;
+    padding: 100px 48px 60px;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .cta-section h2 {
+    font-size: 32px; font-weight: 800;
+    letter-spacing: -0.02em; margin-bottom: 12px;
+  }
+  .cta-section p {
+    font-size: 15px; color: var(--muted); margin-bottom: 28px;
+  }
+
+  footer {
+    padding: 20px 48px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--muted);
+  }
+  footer a { color: var(--nova); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Poly<span>liquid</span></div>
+  <div class="nav-links">
+    <a href="#" class="active">Home</a>
+    <a href="#vaults">Vaults</a>
+    <a href="#">Activity</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid">
+    <div class="hero-left">
+      <div class="hero-chip"><div class="dot"></div> Reputation Oracle</div>
+      <h1>Money can be bought.<br><em>Trust cannot.</em></h1>
+      <p class="hero-sub">
+        The resolution layer for prediction markets. Vote weight is earned
+        through months of correct resolutions &mdash; not purchased with tokens.
+      </p>
+      <div class="hero-ctas">
+        <a href="#vaults" class="btn-primary">Explore Vaults &rarr;</a>
+        <a href="#" class="btn-secondary">View Activity</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="attack-card">
+        <div class="heading">Attack Cost Comparison</div>
+        <div class="attack-row">
+          <div class="attack-label">UMA</div>
+          <div class="attack-bar-track">
+            <div class="attack-bar-fill uma">$750</div>
+          </div>
+        </div>
+        <div class="attack-row">
+          <div class="attack-label">Polyliquid</div>
+          <div class="attack-bar-track">
+            <div class="attack-bar-fill poly">$10.71M</div>
+          </div>
+        </div>
+        <div class="attack-result">
+          <div class="big">14,700&times;</div>
+          <div class="sub">more expensive<br>to attack</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- PROBLEM -->
+<section>
+  <div class="section-label">The Problem</div>
+  <h2>Current oracles are broken</h2>
+  <p class="desc">UMA uses token-weighted voting. Influence can be bought instantly. There is no cost to betrayal.</p>
+  <div class="problem-row">
+    <div class="p-card"><div class="val">$750</div><div class="lbl">Attack cost</div></div>
+    <div class="p-card"><div class="val">$7M</div><div class="lbl">Mar 2025 manipulation</div></div>
+    <div class="p-card"><div class="val">$160M</div><div class="lbl">Jul 2025 dispute</div></div>
+    <div class="p-card"><div class="val">0 days</div><div class="lbl">To buy influence</div></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="section-label">How It Works</div>
+  <h2>Three layers of security</h2>
+  <p class="desc">Delegation, consensus, and dispute resolution.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-badge">Step 1</div>
+      <h3>LP Delegation</h3>
+      <p>LPs choose voters by track record and delegate capital. Commission: 5&ndash;80%. Higher reputation = lower risk.</p>
+    </div>
+    <div class="step">
+      <div class="step-badge">Step 2</div>
+      <h3>Commit-Reveal Voting</h3>
+      <p>Encrypted votes, then reveal. Weight = Stake &times; Rep (&kappa; = 1.0). 99% of markets resolve in 8h.</p>
+    </div>
+    <div class="step">
+      <div class="step-badge">Step 3</div>
+      <h3>DAO Dispute</h3>
+      <p>Traders dispute with 2% bond. DAO votes over 48h. Attackers lose everything.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- POWER DISTRIBUTION -->
+<section>
+  <div class="section-label">Power Distribution</div>
+  <h2>No single group dominates</h2>
+  <p class="desc">&kappa; = 1.0 (linear, Sybil-neutral). The 30/30/34 balance ensures decentralization.</p>
+
+  <div class="power-cols">
+    <div class="power-bars">
+      <div class="pw-row">
+        <div class="pw-label">Elite (10)</div>
+        <div class="pw-track"><div class="pw-fill" style="width:88%"></div></div>
+        <div class="pw-pct">30%</div>
+      </div>
+      <div class="pw-row">
+        <div class="pw-label">Top (40)</div>
+        <div class="pw-track"><div class="pw-fill" style="width:88%"></div></div>
+        <div class="pw-pct">30%</div>
+      </div>
+      <div class="pw-row">
+        <div class="pw-label">Medium (150)</div>
+        <div class="pw-track"><div class="pw-fill" style="width:100%"></div></div>
+        <div class="pw-pct">34%</div>
+      </div>
+      <div class="pw-row">
+        <div class="pw-label">New (800)</div>
+        <div class="pw-track"><div class="pw-fill" style="width:17%"></div></div>
+        <div class="pw-pct">6%</div>
+      </div>
+    </div>
+    <div class="power-info">
+      <div class="pi-card">
+        <strong>W = Stake &times; Reputation</strong>
+        <div class="sub">Linear weight. Splitting accounts gives zero advantage.</div>
+      </div>
+      <div class="pi-card">
+        <strong>30 / 30 / 34 / 6</strong>
+        <div class="sub">No single tier can achieve majority alone.</div>
+      </div>
+      <div class="pi-card whale">
+        <strong>$10M + zero rep = 0% influence</strong>
+        <div class="sub">Whales cannot buy their way in.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ECONOMICS -->
+<section>
+  <div class="section-label">Economics</div>
+  <h2>Risk &harr; Return spectrum</h2>
+  <p class="desc">Higher reputation = lower slash risk + lower APY. Like bonds vs startup equity.</p>
+  <div class="eco-wrap">
+    <table class="eco-table">
+      <thead>
+        <tr><th>Tier</th><th>LP Stake</th><th>Slash Risk</th><th>Commission</th><th>LP APY</th><th>Voter Income</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tb tb-e">Elite</span></td>
+          <td class="mono">$1M</td><td class="mono">0.5%</td><td class="mono">80%</td><td class="mono">15&ndash;20%</td><td class="mono num">$768K/yr</td>
+        </tr>
+        <tr>
+          <td><span class="tb tb-t">Top</span></td>
+          <td class="mono">$500K</td><td class="mono">1.25%</td><td class="mono">60%</td><td class="mono">25&ndash;35%</td><td class="mono num">$144K/yr</td>
+        </tr>
+        <tr>
+          <td><span class="tb tb-m">Medium</span></td>
+          <td class="mono">$500K</td><td class="mono">5.2%</td><td class="mono">40%</td><td class="mono">50&ndash;70%</td><td class="mono num">$40K/yr</td>
+        </tr>
+        <tr>
+          <td><span class="tb tb-n">Newcomer</span></td>
+          <td class="mono">$500K</td><td class="mono">20%</td><td class="mono">5%</td><td class="mono">100&ndash;200%</td><td class="mono num">$1.6K/yr</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- VAULTS PREVIEW -->
+<section id="vaults">
+  <div class="section-label">Live Demo</div>
+  <h2>Voter Vaults</h2>
+  <p class="desc">The marketplace where LPs choose voters by reputation, risk, and return.</p>
+
+  <div class="vault-wrap">
+    <div class="vault-head">
+      <h3>All Vaults</h3>
+      <div class="vf-group">
+        <button class="vf on">All</button>
+        <button class="vf">Elite</button>
+        <button class="vf">Top</button>
+        <button class="vf">Medium</button>
+        <button class="vf">Newcomer</button>
+      </div>
+    </div>
+    <table class="vtable">
+      <thead>
+        <tr><th>Voter</th><th>Tier</th><th>Reputation</th><th>TVL</th><th>Accuracy</th><th style="text-align:right">APR</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="vt-name"><div class="vt-av">AO</div><div><div class="vt-primary">Apex Oracle</div><div class="vt-sub">142 markets</div></div></div></td>
+          <td><span class="tb tb-e">Elite</span></td>
+          <td><div class="rep-bar"><span class="mono">$190M</span><div class="rep-track"><div class="rep-fill" style="width:95%"></div></div></div></td>
+          <td class="mono">$1.00M</td>
+          <td class="mono green">98.0%</td>
+          <td class="mono right">18.5%</td>
+        </tr>
+        <tr>
+          <td><div class="vt-name"><div class="vt-av">SC</div><div><div class="vt-primary">Sentinel Capital</div><div class="vt-sub">138 markets</div></div></div></td>
+          <td><span class="tb tb-e">Elite</span></td>
+          <td><div class="rep-bar"><span class="mono">$180M</span><div class="rep-track"><div class="rep-fill" style="width:90%"></div></div></div></td>
+          <td class="mono">$1.00M</td>
+          <td class="mono green">97.0%</td>
+          <td class="mono right">17.2%</td>
+        </tr>
+        <tr>
+          <td><div class="vt-name"><div class="vt-av">TA</div><div><div class="vt-primary">TruthNode Alpha</div><div class="vt-sub">120 markets</div></div></div></td>
+          <td><span class="tb tb-t">Top</span></td>
+          <td><div class="rep-bar"><span class="mono">$89M</span><div class="rep-track"><div class="rep-fill" style="width:89%"></div></div></div></td>
+          <td class="mono">$500K</td>
+          <td class="mono green">96.0%</td>
+          <td class="mono right">28.0%</td>
+        </tr>
+        <tr>
+          <td><div class="vt-name"><div class="vt-av">DV</div><div><div class="vt-primary">DataVerify</div><div class="vt-sub">98 markets</div></div></div></td>
+          <td><span class="tb tb-m">Medium</span></td>
+          <td><div class="rep-bar"><span class="mono">$25M</span><div class="rep-track"><div class="rep-fill" style="width:83%"></div></div></div></td>
+          <td class="mono">$500K</td>
+          <td class="mono green">92.0%</td>
+          <td class="mono right">55.0%</td>
+        </tr>
+        <tr>
+          <td><div class="vt-name"><div class="vt-av">NR</div><div><div class="vt-primary">NovaResolve</div><div class="vt-sub">12 markets</div></div></div></td>
+          <td><span class="tb tb-n">New</span></td>
+          <td><div class="rep-bar"><span class="mono" style="color:var(--muted)">$600K</span><div class="rep-track"><div class="rep-fill" style="width:60%"></div></div></div></td>
+          <td class="mono">$500K</td>
+          <td class="mono" style="color:var(--muted)">78.0%</td>
+          <td class="mono right">145.0%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ROADMAP -->
+<section>
+  <div class="section-label">Roadmap</div>
+  <h2>From aggregator to oracle</h2>
+  <p class="desc">Four phases. Each proves the model at increasing scale.</p>
+  <div class="rm-grid">
+    <div class="rm-card"><div class="rm-q">Q2 2026</div><h3>UMA Voter Hub</h3><p>Aggregation. Pay 2&times; rewards. Build community.</p></div>
+    <div class="rm-card"><div class="rm-q">Q3 2026</div><h3>Limitless (Base)</h3><p>First live client. Subjective events. Agreement in place.</p></div>
+    <div class="rm-card"><div class="rm-q">Q4 2026</div><h3>Prediction Markets</h3><p>Scale to Probabal, Opinion. Prove reliability.</p></div>
+    <div class="rm-card"><div class="rm-q">2027</div><h3>Polymarket</h3><p>Replace UMA. $10.71M vs $750. DAO for all sizes.</p></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<div class="cta-section">
+  <h2>Explore the live demo</h2>
+  <p>1,000 voters resolving 149 real markets from Limitless Exchange.</p>
+  <div class="hero-ctas" style="justify-content:center">
+    <a href="#" class="btn-primary">Explore Vaults &rarr;</a>
+    <a href="#" class="btn-secondary">View Activity</a>
+  </div>
+</div>
+
+<footer>
+  <span>Polyliquid &copy; 2026</span>
+  <span>7 formulas &middot; 11 parameters &middot; R1 + DAO</span>
+  <a href="#">polyliquid.ai</a>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,512 @@
+﻿POLYLIQUID  |  Technical Whitepaper  |  v1.0
+
+
+POLYLIQUID
+Decentralized Delegated Reputation Oracle
+
+
+Technical Whitepaper v1.0
+March 2026
+polyliquid.ai
+"Money can be bought instantly. Trust cannot."
+________________
+
+
+1. Executive Summary
+Polyliquid is a Decentralized Delegated Reputation Oracle designed to replace existing oracle systems for prediction markets. The protocol combines delegated staking with a reputation-based voting mechanism to create an oracle that is orders of magnitude more expensive to attack than current solutions.
+Core innovation: Voting weight is determined by W = LP_stake × Reputation, where reputation is earned through months of correct voting and cannot be purchased. This creates a system where attacking the oracle requires corrupting voters who have significant economic skin in the game.
+
+
+Key Metrics
+Metric
+	Value
+	Attack cost (worst case)
+	$10.71M
+	UMA attack cost
+	$750
+	Safety multiplier
+	14,700×
+	Resolution time (99% of markets)
+	8 hours
+	Weight formula
+	W = Stake × Rep (κ = 1.0)
+	Power distribution
+	30% / 30% / 34% / 6% (Elite/Top/Mid/New)
+	Max reputation (elite)
+	$200M
+	________________
+
+
+2. The Problem: Oracle Vulnerability
+Prediction markets require oracles to determine the outcome of events. For subjective events (politics, economics, culture), automated oracles like Chainlink cannot be used. Human-powered oracles are required.
+The dominant solution today is UMA (Universal Market Access), which uses a token-weighted voting system called the Data Verification Mechanism (DVM). UMA's fundamental flaw: voting power equals token holdings. This means influence can be purchased instantly.
+
+
+2.1 UMA Attack Economics
+An attacker can acquire enough UMA tokens to control a vote for approximately $750 in transaction costs. The attack on March 2025 demonstrated a $7M market manipulation, and the July 2025 dispute involved $160M at risk.
+The core vulnerability: there is no time-based component to trust in UMA. A whale can buy tokens today and control tomorrow's vote.
+
+
+2.2 Market Size
+Total prediction market volume in 2025 reached approximately $44B. Of this, approximately $20B (30%) represents subjective events requiring human oracles. At 0.2% commission, this represents $40M in annual oracle fees.
+The market is segmented: sports (~50%, objective, uses data feeds), crypto prices (~20%, uses Chainlink), and politics/economics/culture (~30%, subjective, requires human oracles). Polyliquid targets the third segment.
+________________
+
+
+3. Protocol Design
+3.1 Core Mechanism: Delegated Reputation Staking
+The protocol operates through three layers:
+Layer 1: LP Delegation. Liquidity Providers choose voters (vouters) based on their track record and delegate capital to them. Voters stake this capital on market outcomes. Commission rates are freely negotiated between LP and voter (5–80%).
+Layer 2: Commit-Reveal Voting. Voters submit encrypted votes (commit phase), then reveal them. Voting weight is determined by W = LP_stake × Reputation. Consensus requires 50% + 1 point of weighted votes.
+Layer 3: Dispute Resolution via DAO. Any trader can dispute a Round 1 result by posting a bond equal to 2% of the market size. The DAO then votes over 48 hours to confirm or overturn the result.
+
+
+3.2 Reputation Formula
+R(t) = Σ LP_stake × 0.995^(days since vote)
+Each correct vote adds the LP stake amount to the voter's reputation. Old votes decay at 0.5% per day, giving a half-life of 138 days.
+Reputation ceiling = daily_stake / 0.005
+For an elite voter staking $1M per day, the maximum achievable reputation is $1M / 0.005 = $200M. This ceiling is reached asymptotically after approximately 12–18 months of consistent voting.
+If a voter stops voting, reputation decays to half in 138 days. This protects against abandoned accounts and "sleeping" voters accumulating outsized influence.
+
+
+3.3 Voting Weight: κ = 1.0 (Sybil-Neutral)
+W = LP_stake × Rep^1.0
+The exponent κ = 1.0 (linear) is chosen for Sybil-neutrality: splitting an account into two provides no advantage, but also no disadvantage. This eliminates both the incentive to create fake accounts and the centralization risk of super-linear weighting.
+
+
+Power Distribution
+Tier
+	Count
+	LP Stake
+	Reputation
+	Weight %
+	Key Property
+	Elite
+	10
+	$1M
+	$200M
+	30%
+	Max rep, lowest slash risk
+	Top
+	40
+	$500K
+	$100M
+	30%
+	High rep, moderate slash
+	Medium
+	150
+	$500K
+	$30M
+	34%
+	Growing rep, higher APY for LP
+	Newcomer
+	800
+	$500K
+	$1M
+	6%
+	Highest LP APY, highest slash
+	Whale (no rep)
+	—
+	$10M
+	$0
+	0%
+	Cannot participate without rep
+	
+
+The 30/30/34 distribution ensures no single tier can dominate the system. Even a whale with $10M in capital but zero reputation has 0% voting power. Influence must be earned over time.
+________________
+
+
+4. Slashing Mechanisms
+4.1 Reputation Slashing
+S_rep = 50% × (W_majority − 50%) / 50%
+R_new = R × (1 − S_rep)
+Reputation slashing is proportional to the margin of the vote. A close vote (51/49) results in a 1% slash, while a clear consensus (80/20) results in a 30% slash. If a voter loses a DAO dispute, reputation is slashed 100% to zero.
+
+
+Example: Elite voter with $200M reputation
+Vote Result
+	Slash %
+	Rep After
+	Lost
+	Recovery
+	51/49
+	1%
+	$198M
+	$2M
+	~2 days
+	60/40
+	10%
+	$180M
+	$20M
+	~20 days
+	80/20
+	30%
+	$140M
+	$60M
+	~60 days
+	Dispute (DAO)
+	100%
+	$0
+	$200M
+	~12 months
+	
+
+4.2 LP Slashing
+LP slashing operates in two modes:
+Normal error: LP_slash = 20% / (1 + R / $33.3M)²
+Dispute (DAO ≠ R1): LP_slash = 20% (fixed)
+
+
+Voter Reputation
+	Normal Error
+	Dispute
+	$0 (newcomer)
+	20%
+	20%
+	$30M (medium)
+	5.2%
+	20%
+	$100M (top)
+	1.25%
+	20%
+	$200M (elite)
+	0.5%
+	20%
+	
+
+The cascading effect: reputation drops → LP slash risk increases → LP withdraws capital → stake drops → weight drops → income drops. A single failed dispute destroys the voter's entire economic position.
+________________
+
+
+5. NPV: The Price of Betrayal
+5.1 How We Calculate NPV
+NPV (Net Present Value of betrayal) measures the total economic loss a voter suffers from participating in an attack. This includes lost future income during the reputation recovery period.
+
+
+Elite Voter Profile
+Parameter
+	Value
+	LP Stake
+	$1M
+	Reputation
+	$200M
+	Share of reward pool
+	30% (10 elite voters share 30% of $32M pool)
+	Annual rewards
+	$32M × 30% / 10 = $960K
+	Commission (80%)
+	$768K/year voter income
+	LP receives (20%)
+	$192K → 19.2% APY on $1M stake
+	
+
+5.2 Cascade of Destruction After Attack
+When a voter participates in an attack that is overturned by DAO:
+Step 1: DAO overturns R1 result → attacker's reputation is slashed to zero.
+Step 2: Reputation = 0 → LP slash risk jumps from 0.5% to 20%.
+Step 3: LP sees 20% slash risk → immediately withdraws all capital.
+Step 4: No LP = no stake = no weight = no rewards = no income.
+Step 5: Voter restarts from zero as a newcomer. Recovery takes approximately 12 months.
+Step 6: Even after 12 months, LP may not return. The market remembers.
+
+
+5.3 Month-by-Month Recovery
+Period
+	Normal
+	Actual
+	Loss
+	What Happens
+	Month 1–3
+	$192K
+	$600
+	$191K
+	Rep = 0. LP gone. Minimal stake. Weight = zero. Income like a random newcomer.
+	Month 3–6
+	$192K
+	$5K
+	$187K
+	Small LP risks ~$50K delegation. Growing tier. Rep slowly accumulates. Slash still 12%.
+	Month 6–9
+	$192K
+	$18K
+	$174K
+	Medium tier. LP stake ~$200K. Rep ~$30M. Slash 5%. LP cautious — remembers the attack.
+	Month 9–12
+	$192K
+	$96K
+	$96K
+	Approaching top tier. LP stake ~$500K. Rep ~$80M. Still far from elite status.
+	TOTAL
+	$768K
+	$120K
+	$653K
+	NPV of elite voter = $653K
+	
+
+Why NPV Is a Conservative Estimate
+We assume LP returns after 12 months. In reality: the market remembers the attack, LP may never return; other voters will have taken the pool share, making it impossible to recover 30%; the real loss is approximately $768K+ (entire career), not $653K.
+________________
+
+
+6. Total Attack Cost
+6.1 Worst Case Scenario
+The most efficient attack uses the highest-reputation voters. Worst case: an attacker bribes 5 elite and 20 top-tier voters to form a majority coalition.
+
+
+NPV by Tier
+Tier (Commission)
+	Annual Income
+	NPV
+	Elite (80%)
+	$768K
+	$653K
+	Top (60%)
+	$144K
+	$122K
+	Medium (40%)
+	$40K
+	$18K
+	
+
+Attack Composition: 5 Elite + 20 Top
+Component
+	Amount
+	NPV: 5 × $653K + 20 × $122K
+	$5.71M
+	LP Slash: 5 × $1M × 20% + 20 × $500K × 20%
+	$3.0M
+	DAO Bond: 2% of market
+	$2.0M
+	TOTAL
+	$10.71M
+	
+
+6.2 Safety Boundaries
+R1 alone protects markets up to $11M (99.5% of all markets). With DAO escalation, protection extends to any market size (∞).
+The real cost of attack is significantly higher than $10.71M because coordinating 25 independent voters requires trust among all participants. A single defection exposes the entire conspiracy.
+________________
+
+
+7. Dispute Resolution
+7.1 Timeline
+Phase
+	< $10M Market
+	> $10M Market
+	Commit
+	2 hours
+	2 hours
+	Reveal
+	2 hours
+	2 hours
+	Dispute Window
+	4 hours
+	20 hours
+	Total R1
+	8 hours
+	24 hours
+	+ DAO (if disputed)
+	+ 48h = 56h total
+	+ 48h = 72h total
+	99% of markets resolve within 8 hours without dispute.
+
+
+7.2 Slash Distribution
+The distribution of slashes and bonds depends on the dispute outcome. DAO Polyliquid receives 25% of slashes in all dispute scenarios to fund protocol operations and DAO voter incentives.
+
+
+Scenario
+	R1 Slashes
+	Bond
+	Client
+	DAO Polyliquid
+	No dispute
+	→ correct voters
+	—
+	$0
+	$0
+	DAO = R1 (spam)
+	→ 75% correct R1
+	100% → client
+	100% bond
+	25% slashes
+	DAO ≠ R1 (attack)
+	50% correct R1, 25% client, 25% DAO PL
+	Return to disputer
+	25% slashes
+	25% slashes
+	________________
+
+
+8. Attack Resistance Analysis
+8.1 Direct Voter Bribery
+An attacker must bribe voters whose combined weight exceeds 50%. With κ = 1.0 and 30/30/34 distribution, no single tier can achieve this alone. The minimum viable coalition requires at least 5 elite + 20 top voters (25 people).
+Coordination difficulty: each additional conspirator exponentially increases the risk of exposure. One honest participant can expose the entire scheme because all votes are verifiable on-chain after the reveal phase.
+
+
+8.2 Reputation Farming
+Can an attacker build reputation from scratch to attack later? Time required: ~12–18 months of consistent correct voting with $1M daily stake to reach elite status ($200M rep). During this time, the attacker provides genuine economic value to the system.
+Cost: $1M in LP capital locked for 12–18 months, plus commission fees paid to protocol. The attacker would earn reputation but also build dependencies (LP relationships, income streams) that make the attack economically irrational.
+
+
+8.3 Sybil Attack
+With κ = 1.0 (linear weight), splitting one account into multiple provides zero advantage. One account with $200M reputation has exactly the same weight as two accounts with $100M each. This makes Sybil attacks economically neutral — no incentive to create fake accounts.
+
+
+8.4 DAO Corruption
+Could DAO Polyliquid voters be bribed to vote incorrectly?
+DAO Polyliquid receives 25% of slashes when it overturns R1. This creates a theoretical conflict of interest: DAO could falsely overturn correct R1 results to earn slashes.
+
+
+Why this is economically irrational:
+The 25% slash reward for any single dispute is small relative to the Polyliquid token market cap. A false DAO vote would immediately damage protocol credibility, causing token price collapse that dwarfs any slash income.
+Example: if Polyliquid has a $500M market cap and a dispute produces $3M in slashes, DAO would earn $750K (25% of $3M). But a credibility-damaging false vote could easily cause a 10%+ token price drop = $50M+ loss. The ratio is 67:1 against corruption.
+Additionally: all DAO votes are on-chain and publicly auditable; voters who participated in the attack lose their reputation permanently; clients (Polymarket etc.) would immediately terminate their relationship; the entire voter community would exit.
+
+
+8.5 Client-Side Corruption (Polymarket DAO)
+What if the client's DAO (e.g., Polymarket) tries to manipulate outcomes?
+The client does not control Polyliquid's DAO. The dispute resolution is handled by Polyliquid token holders, not the client. The client receives 25% of slashes and 100% of spam bonds, but cannot influence the vote.
+For the client to benefit from manipulation, they would need to collude with Polyliquid DAO voters. But with a $20B+ market cap (Polymarket) or $500M+ (Polyliquid), the risk-reward ratio makes this irrational.
+
+
+8.6 Bond Manipulation on Large Markets
+For a $10B market, the dispute bond = 2% = $200M. If the dispute is spam, the client receives 100% of the bond ($200M). Could this motivate false spam classifications?
+No — the DAO Polyliquid (not the client) decides whether a dispute is spam or legitimate. The client has no vote in this decision. And for DAO Polyliquid, confirming a legitimate dispute as spam would mean endorsing an attack, destroying protocol credibility for zero direct benefit (DAO PL gets $0 from spam bond).
+________________
+
+
+9. Economics
+9.1 Revenue Model
+Platform commission: 0.2% of market volume. At $20B annual volume: $40M in fees. Protocol share (π = 20%): $8M. Voter and LP reward pool: $32M.
+
+
+9.2 Voter and LP Economics
+Tier
+	LP Stake
+	LP Slash
+	Commission
+	APY LP
+	Voter Income
+	Elite
+	$1M
+	0.5%
+	80%
+	15–20%
+	$768K/year
+	Top
+	$500K
+	1.25%
+	60%
+	25–35%
+	$144K/year
+	Medium
+	$500K
+	5.2%
+	40%
+	50–70%
+	$40K/year
+	Growing
+	$500K
+	12.4%
+	20%
+	70–100%
+	$10K/year
+	Newcomer
+	$500K
+	20%
+	5%
+	100–200%
+	$1.6K/year
+	
+
+LP APY is inversely correlated with voter reputation. Elite voters offer safety (0.5% slash risk) but lower APY. Newcomers offer high APY (100–200%) but with 20% slash risk. The market self-balances based on LP risk appetite.
+________________
+
+
+10. Protocol Parameters
+Parameter
+	Value
+	Description
+	κ
+	1.0
+	Linear weight exponent, Sybil-neutral
+	δ
+	0.995/day
+	Reputation decay (half-life 138 days)
+	S_base
+	50%
+	Maximum reputation slash per vote
+	LP_slash_max
+	20%
+	Maximum LP slash
+	R₀
+	$33.3M
+	LP slash curve parameter
+	LP_slash_dispute
+	20%
+	Fixed LP slash in dispute
+	π
+	20%
+	Protocol share of fees
+	Commission
+	0.2%
+	Fixed commission on market volume
+	Bond
+	2% of market
+	Dispute threshold for DAO escalation
+	MaxPayout
+	99.9%
+	For safety calculations
+	Dispute window
+	4h / 20h
+	< $10M / > $10M markets
+	________________
+
+
+11. Roadmap
+Phase 1: UMA Voter Hub (Q2 2026)
+Build a voter aggregation platform for UMA voters. Voters route their votes through Polyliquid and receive 2× their current UMA rewards. This bootstraps the voter community and builds track record.
+Phase 2: Limitless on Base (Q3 2026)
+Integrate with Limitless on Base network for subjective event markets. First live client on the Polyliquid protocol. Agreement in place.
+Phase 3: Prediction Markets Expansion (Q4 2026)
+Scale to additional prediction market platforms including Probabal, Opinion, and others. Prove reliability across real markets with real money at stake.
+Phase 4: Polymarket (2027)
+Propose replacing UMA as Polymarket's oracle. Key argument: attack cost of $10.71M vs $750 (14,700× improvement). Polymarket earns revenue from slashes and dispute bonds. DAO protects markets above $11M.
+________________
+
+
+12. Competitive Comparison
+
+
+	UMA
+	Polyliquid
+	Type
+	Decentralized
+	Decentralized
+	Attack cost
+	$750
+	$10.71M
+	Vote weight
+	Tokens ($)
+	Stake × Rep (κ = 1.0)
+	Decentralization
+	Whale dominates
+	30/30/34 balance
+	Cycle time
+	~48h
+	8–24h (99%)
+	2025 exploits
+	$7M + $160M
+	∞ with DAO
+	Client revenue
+	$0
+	25% slashes + 100% spam bonds
+	
+
+
+
+POLYLIQUID
+Money can be bought. Trust cannot.
+polyliquid.ai
+polyliquid.ai  |

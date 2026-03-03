@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polyliquid — Signal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --base: #0a0a0a;
+    --surface: #0f0f0f;
+    --border: #1a1a1a;
+    --text: #cccccc;
+    --bright: #ffffff;
+    --green: #00ff41;
+    --green-dim: rgba(0, 255, 65, 0.06);
+    --green-mid: rgba(0, 255, 65, 0.15);
+    --green-glow: rgba(0, 255, 65, 0.4);
+    --red: #ff3333;
+    --amber: #ffaa00;
+    --mono: 'Share Tech Mono', 'Courier New', monospace;
+    --body: 'Exo 2', system-ui, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--base);
+    color: var(--text);
+    font-family: var(--body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* CRT scanlines */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 9999;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+  }
+  /* Subtle vignette */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 9998;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.4) 100%);
+  }
+
+  /* ANIMATIONS */
+  @keyframes typeIn {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes glowPulse {
+    0%, 100% { text-shadow: 0 0 4px var(--green-mid); }
+    50% { text-shadow: 0 0 16px var(--green-glow), 0 0 32px var(--green-dim); }
+  }
+  @keyframes scanDown {
+    0% { top: -2px; }
+    100% { top: 100%; }
+  }
+  @keyframes countUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade { opacity: 0; animation: fadeIn 0.5s forwards; }
+  .fd1 { animation-delay: 0.3s; } .fd2 { animation-delay: 0.6s; }
+  .fd3 { animation-delay: 0.9s; } .fd4 { animation-delay: 1.2s; }
+  .fd5 { animation-delay: 1.5s; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 48px;
+    background: rgba(10, 10, 10, 0.95);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono);
+  }
+  .nav-brand {
+    font-size: 14px; color: var(--green);
+    letter-spacing: 0.08em;
+  }
+  .nav-links { display: flex; gap: 24px; }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px; color: var(--text);
+    text-decoration: none;
+    opacity: 0.5; transition: all 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; color: var(--green); }
+  .nav-links a.active { opacity: 1; color: var(--green); }
+  .nav-status {
+    font-family: var(--mono);
+    font-size: 11px; color: var(--green);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green-mid);
+    animation: blink 2s infinite;
+  }
+
+  /* HERO — terminal style */
+  .hero {
+    padding: 100px 32px 60px;
+    max-width: 900px; margin: 0 auto;
+    font-family: var(--mono);
+  }
+  .terminal-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .terminal-block::before {
+    content: '';
+    position: absolute; left: 0; right: 0;
+    height: 2px; background: var(--green-dim);
+    animation: scanDown 3s linear infinite;
+  }
+  .terminal-header {
+    display: flex; gap: 6px; margin-bottom: 24px;
+  }
+  .terminal-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--border);
+  }
+  .terminal-dot.r { background: var(--red); opacity: 0.7; }
+  .terminal-dot.y { background: var(--amber); opacity: 0.7; }
+  .terminal-dot.g { background: var(--green); opacity: 0.7; }
+
+  .t-line {
+    font-size: 14px; line-height: 2;
+    color: var(--text);
+  }
+  .t-line .prompt { color: var(--green); }
+  .t-line .cmd { color: var(--bright); }
+  .t-line .comment { color: #555; }
+  .t-line .value { color: var(--green); }
+  .t-line .danger { color: var(--red); }
+  .t-line .amber { color: var(--amber); }
+
+  .hero-title {
+    font-family: var(--body);
+    font-size: 48px; font-weight: 800;
+    line-height: 1.1; letter-spacing: -0.03em;
+    margin: 48px 0 16px;
+    color: var(--bright);
+  }
+  .hero-title .glow {
+    color: var(--green);
+    animation: glowPulse 3s ease-in-out infinite;
+  }
+  .hero-sub {
+    font-size: 16px; color: var(--text);
+    opacity: 0.6; margin-bottom: 36px;
+    max-width: 520px;
+  }
+  .hero-ctas { display: flex; gap: 12px; }
+  .btn-term {
+    font-family: var(--mono);
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 24px;
+    background: var(--green); color: var(--base);
+    font-weight: 400; font-size: 13px;
+    border: none; cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 0 16px var(--green-mid);
+    transition: all 0.2s;
+  }
+  .btn-term:hover { box-shadow: 0 0 32px var(--green-glow); }
+  .btn-ghost {
+    font-family: var(--mono);
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 24px;
+    background: transparent; color: var(--green);
+    font-size: 13px;
+    border: 1px solid var(--green-mid);
+    cursor: pointer; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { background: var(--green-dim); }
+
+  /* SECTIONS */
+  section {
+    padding: 60px 32px;
+    max-width: 900px; margin: 0 auto;
+  }
+  .section-head {
+    font-family: var(--mono);
+    font-size: 11px; color: var(--green);
+    text-transform: uppercase; letter-spacing: 0.15em;
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-head::before { content: '>'; }
+  section h2 {
+    font-family: var(--body);
+    font-size: 32px; font-weight: 700;
+    color: var(--bright); margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+  section .desc {
+    font-size: 14px; color: var(--text);
+    opacity: 0.5; margin-bottom: 40px;
+    max-width: 500px;
+  }
+  .hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+  /* COMPARISON — as terminal output */
+  .comp-output {
+    font-family: var(--mono);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 32px;
+    font-size: 14px;
+    line-height: 2.2;
+    position: relative;
+    overflow: hidden;
+  }
+  .comp-output::before {
+    content: '';
+    position: absolute; left: 0; right: 0;
+    height: 1px; background: var(--green-dim);
+    animation: scanDown 4s linear infinite;
+  }
+  .comp-output .label { color: #555; }
+  .comp-output .uma { color: var(--red); font-size: 18px; }
+  .comp-output .poly { color: var(--green); font-size: 18px; }
+  .comp-output .big {
+    font-family: var(--body);
+    font-size: 56px; font-weight: 800;
+    color: var(--green);
+    line-height: 1.2;
+    animation: glowPulse 3s ease-in-out infinite;
+  }
+  .comp-output .sep {
+    color: var(--border);
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .comp-bar-row {
+    display: flex; align-items: center; gap: 8px;
+    margin: 4px 0;
+  }
+  .comp-bar-label { width: 80px; color: #555; }
+  .comp-bar-track {
+    flex: 1; height: 16px;
+    background: var(--border);
+    position: relative;
+  }
+  .comp-bar-fill {
+    height: 100%; position: absolute; left: 0; top: 0;
+  }
+  .comp-bar-fill.uma-bar { width: 2%; background: var(--red); }
+  .comp-bar-fill.poly-bar {
+    width: 100%;
+    background: var(--green);
+    box-shadow: 0 0 12px var(--green-mid);
+  }
+
+  /* STEPS — terminal cards */
+  .steps-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;
+  }
+  .step-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  .step-card:hover { border-color: var(--green-mid); }
+  .step-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: var(--green);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .step-card:hover::before { opacity: 1; }
+  .step-idx {
+    font-family: var(--mono);
+    font-size: 11px; color: var(--green);
+    margin-bottom: 12px;
+  }
+  .step-card h3 {
+    font-family: var(--body);
+    font-size: 16px; font-weight: 700;
+    color: var(--bright); margin-bottom: 8px;
+  }
+  .step-card p {
+    font-size: 13px; color: var(--text); opacity: 0.5;
+    line-height: 1.7;
+  }
+
+  /* POWER — as data readout */
+  .power-readout {
+    font-family: var(--mono);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 32px;
+  }
+  .pr-header {
+    font-size: 11px; color: var(--green);
+    margin-bottom: 16px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .pr-row {
+    display: grid; grid-template-columns: 90px 50px 1fr 50px;
+    gap: 12px; align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .pr-row:last-child { border-bottom: none; }
+  .pr-name { color: var(--bright); }
+  .pr-count { color: #555; }
+  .pr-track { height: 12px; background: var(--border); }
+  .pr-fill { height: 100%; background: var(--green); opacity: 0.6; }
+  .pr-pct { color: var(--green); text-align: right; font-weight: 400; }
+  .pr-warn {
+    margin-top: 16px; padding-top: 16px;
+    border-top: 1px solid var(--border);
+    color: var(--red); font-size: 12px;
+  }
+
+  /* ECONOMICS — grid of readouts */
+  .eco-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  }
+  .eco-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+    font-family: var(--mono);
+  }
+  .eco-tier {
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.1em; margin-bottom: 12px;
+  }
+  .eco-tier.e { color: var(--green); }
+  .eco-tier.t { color: var(--amber); }
+  .eco-tier.m { color: #6699ff; }
+  .eco-tier.n { color: #555; }
+  .eco-line {
+    display: flex; justify-content: space-between;
+    font-size: 12px; padding: 3px 0;
+    color: var(--text); opacity: 0.5;
+  }
+  .eco-line .v { color: var(--bright); opacity: 1; }
+  .eco-income {
+    font-family: var(--body);
+    font-size: 24px; font-weight: 700;
+    color: var(--green);
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* VAULT TABLE */
+  .vault-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .vault-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono); font-size: 12px;
+  }
+  .vault-head .title { color: var(--green); }
+  .vf-g { display: flex; gap: 4px; }
+  .vf-b {
+    font-family: var(--mono);
+    padding: 3px 10px; font-size: 11px;
+    border: 1px solid var(--border);
+    background: transparent; color: #555;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .vf-b.on { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+  .vtb { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 13px; }
+  .vtb th {
+    font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: #555;
+    padding: 8px 16px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .vtb td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .vtb tr:last-child td { border-bottom: none; }
+  .vtb tr:hover td { background: rgba(0, 255, 65, 0.02); }
+  .vt-primary { color: var(--bright); }
+  .vt-sub { color: #555; font-size: 11px; }
+  .vt-elite { color: var(--green); }
+  .vt-top { color: var(--amber); }
+  .vt-med { color: #6699ff; }
+  .vt-new { color: #555; }
+  .rep-bar { display: flex; align-items: center; gap: 6px; }
+  .rep-track { width: 40px; height: 3px; background: var(--border); }
+  .rep-fill { height: 100%; background: var(--green); }
+  .green { color: var(--green); }
+  .right { text-align: right; }
+
+  /* ROADMAP — timeline */
+  .rm-line {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    position: relative;
+    font-family: var(--mono);
+  }
+  .rm-line::before {
+    content: '';
+    position: absolute; top: 6px;
+    left: 60px; right: 60px;
+    height: 1px; background: var(--border);
+  }
+  .rm-item { padding: 32px 16px 0; text-align: center; position: relative; }
+  .rm-dot {
+    width: 12px; height: 12px;
+    background: var(--green);
+    position: absolute; top: 0;
+    left: 50%; transform: translateX(-50%);
+    box-shadow: 0 0 8px var(--green-mid);
+  }
+  .rm-q {
+    font-size: 11px; color: var(--green);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .rm-item h3 {
+    font-family: var(--body);
+    font-size: 14px; font-weight: 600;
+    color: var(--bright); margin-bottom: 6px;
+  }
+  .rm-item p { font-size: 12px; color: #555; line-height: 1.5; }
+
+  /* FOOTER */
+  .foot-cta {
+    text-align: center;
+    padding: 60px 32px;
+    max-width: 900px; margin: 0 auto;
+  }
+  .foot-cta h2 {
+    font-family: var(--body);
+    font-size: 28px; font-weight: 700;
+    color: var(--bright); margin-bottom: 12px;
+  }
+  .foot-cta p { font-size: 14px; color: #555; margin-bottom: 24px; }
+  footer {
+    padding: 16px 32px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11px; color: #555;
+  }
+  footer a { color: var(--green); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">POLYLIQUID v1.0</div>
+  <div class="nav-links">
+    <a href="#" class="active">[home]</a>
+    <a href="#vaults">[vaults]</a>
+    <a href="#">[activity]</a>
+  </div>
+  <div class="nav-status"><div class="status-dot"></div> LIVE</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="terminal-block fade fd1">
+    <div class="terminal-header">
+      <div class="terminal-dot r"></div>
+      <div class="terminal-dot y"></div>
+      <div class="terminal-dot g"></div>
+    </div>
+    <div class="t-line"><span class="prompt">$</span> <span class="cmd">polyliquid --status</span></div>
+    <div class="t-line"><span class="comment">// Oracle network active</span></div>
+    <div class="t-line">voters_online: <span class="value">1,000</span></div>
+    <div class="t-line">markets_active: <span class="value">149</span></div>
+    <div class="t-line">attack_cost: <span class="value">$10,710,000</span></div>
+    <div class="t-line">uma_attack_cost: <span class="danger">$750</span></div>
+    <div class="t-line">safety_multiplier: <span class="value">14,700x</span></div>
+    <div class="t-line"><span class="prompt">$</span> <span class="cmd">_</span></div>
+  </div>
+
+  <h1 class="hero-title fade fd2">Money can be bought.<br><span class="glow">Trust cannot.</span></h1>
+  <p class="hero-sub fade fd3">Decentralized reputation oracle. Vote weight = Stake &times; Reputation. Earned over months. Cannot be purchased.</p>
+  <div class="hero-ctas fade fd4">
+    <a href="#vaults" class="btn-term">> explore_vaults</a>
+    <a href="#" class="btn-ghost">> view_activity</a>
+  </div>
+</div>
+
+<hr class="hr">
+
+<!-- COMPARISON -->
+<section>
+  <div class="section-head">Attack Analysis</div>
+  <h2>14,700&times; more expensive to attack</h2>
+
+  <div class="comp-output fade fd1">
+    <div class="comp-bar-row">
+      <div class="comp-bar-label">UMA</div>
+      <div class="comp-bar-track"><div class="comp-bar-fill uma-bar"></div></div>
+      <span class="uma">&nbsp;$750</span>
+    </div>
+    <div class="comp-bar-row">
+      <div class="comp-bar-label">POLYLIQUID</div>
+      <div class="comp-bar-track"><div class="comp-bar-fill poly-bar"></div></div>
+      <span class="poly">&nbsp;$10.71M</span>
+    </div>
+    <div class="sep">────────────────────────────────────────────────────────────</div>
+    <div style="margin-top:12px">
+      <div class="big">14,700&times;</div>
+      <div style="color:#555; font-size: 13px; margin-top:4px;">R1 protects up to $11M. DAO makes it infinite.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="hr">
+
+<!-- PROBLEM -->
+<section>
+  <div class="section-head">Vulnerability Report</div>
+  <h2>Current oracles are broken</h2>
+  <div class="desc">UMA token-weighted voting. Influence purchased instantly.</div>
+  <div class="steps-row">
+    <div class="step-card"><div class="step-idx">[VULN-001]</div><h3>$750</h3><p>Total cost to attack UMA. Single transaction.</p></div>
+    <div class="step-card"><div class="step-idx">[VULN-002]</div><h3>$7M exploit</h3><p>March 2025. Whale manipulation of market outcome.</p></div>
+    <div class="step-card"><div class="step-idx">[VULN-003]</div><h3>$160M dispute</h3><p>July 2025. Largest prediction market dispute in history.</p></div>
+  </div>
+</section>
+
+<hr class="hr">
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="section-head">Protocol Architecture</div>
+  <h2>Three layers of security</h2>
+  <div class="desc">Delegation &rarr; Consensus &rarr; Dispute</div>
+  <div class="steps-row">
+    <div class="step-card"><div class="step-idx">[LAYER 1]</div><h3>LP Delegation</h3><p>LPs choose voters by track record. Commission: 5&ndash;80%. Higher reputation = lower risk.</p></div>
+    <div class="step-card"><div class="step-idx">[LAYER 2]</div><h3>Commit-Reveal</h3><p>Encrypted votes, then reveal. W = Stake &times; Rep. 99% resolve in 8h.</p></div>
+    <div class="step-card"><div class="step-idx">[LAYER 3]</div><h3>DAO Dispute</h3><p>2% bond. DAO votes 48h. Attackers lose everything.</p></div>
+  </div>
+</section>
+
+<hr class="hr">
+
+<!-- POWER -->
+<section>
+  <div class="section-head">Weight Distribution</div>
+  <h2>No single group dominates</h2>
+  <div class="desc">&kappa; = 1.0. Linear. Sybil-neutral.</div>
+  <div class="power-readout">
+    <div class="pr-header">> distribution --tiers</div>
+    <div class="pr-row"><div class="pr-name">ELITE</div><div class="pr-count">10</div><div class="pr-track"><div class="pr-fill" style="width:88%"></div></div><div class="pr-pct">30%</div></div>
+    <div class="pr-row"><div class="pr-name">TOP</div><div class="pr-count">40</div><div class="pr-track"><div class="pr-fill" style="width:88%"></div></div><div class="pr-pct">30%</div></div>
+    <div class="pr-row"><div class="pr-name">MEDIUM</div><div class="pr-count">150</div><div class="pr-track"><div class="pr-fill" style="width:100%"></div></div><div class="pr-pct">34%</div></div>
+    <div class="pr-row"><div class="pr-name">NEWCOMER</div><div class="pr-count">800</div><div class="pr-track"><div class="pr-fill" style="width:17%"></div></div><div class="pr-pct">6%</div></div>
+    <div class="pr-warn">WARNING: whale($10M, rep=0) => weight: 0% [ACCESS DENIED]</div>
+  </div>
+</section>
+
+<hr class="hr">
+
+<!-- ECONOMICS -->
+<section>
+  <div class="section-head">Economics</div>
+  <h2>Risk &harr; Return</h2>
+  <div class="desc">Higher reputation = lower slash, lower APY.</div>
+  <div class="eco-grid">
+    <div class="eco-box"><div class="eco-tier e">ELITE</div><div class="eco-line"><span>Stake</span><span class="v">$1M</span></div><div class="eco-line"><span>Slash</span><span class="v">0.5%</span></div><div class="eco-line"><span>Comm</span><span class="v">80%</span></div><div class="eco-line"><span>APY</span><span class="v">15-20%</span></div><div class="eco-income">$768K</div></div>
+    <div class="eco-box"><div class="eco-tier t">TOP</div><div class="eco-line"><span>Stake</span><span class="v">$500K</span></div><div class="eco-line"><span>Slash</span><span class="v">1.25%</span></div><div class="eco-line"><span>Comm</span><span class="v">60%</span></div><div class="eco-line"><span>APY</span><span class="v">25-35%</span></div><div class="eco-income">$144K</div></div>
+    <div class="eco-box"><div class="eco-tier m">MEDIUM</div><div class="eco-line"><span>Stake</span><span class="v">$500K</span></div><div class="eco-line"><span>Slash</span><span class="v">5.2%</span></div><div class="eco-line"><span>Comm</span><span class="v">40%</span></div><div class="eco-line"><span>APY</span><span class="v">50-70%</span></div><div class="eco-income">$40K</div></div>
+    <div class="eco-box"><div class="eco-tier n">NEWCOMER</div><div class="eco-line"><span>Stake</span><span class="v">$500K</span></div><div class="eco-line"><span>Slash</span><span class="v">20%</span></div><div class="eco-line"><span>Comm</span><span class="v">5%</span></div><div class="eco-line"><span>APY</span><span class="v">100-200%</span></div><div class="eco-income">$1.6K</div></div>
+  </div>
+</section>
+
+<hr class="hr">
+
+<!-- VAULTS -->
+<section id="vaults">
+  <div class="section-head">Vault Registry</div>
+  <h2>Voter Vaults</h2>
+  <div class="desc">LPs browse voters by reputation, risk, and return.</div>
+  <div class="vault-wrap">
+    <div class="vault-head">
+      <span class="title">> ls --vaults --all</span>
+      <div class="vf-g">
+        <button class="vf-b on">ALL</button>
+        <button class="vf-b">ELITE</button>
+        <button class="vf-b">TOP</button>
+        <button class="vf-b">MED</button>
+      </div>
+    </div>
+    <table class="vtb">
+      <thead><tr><th>Voter</th><th>Tier</th><th>Reputation</th><th>TVL</th><th>Acc</th><th class="right">APR</th></tr></thead>
+      <tbody>
+        <tr><td><div class="vt-primary">Apex Oracle</div><div class="vt-sub">142 markets</div></td><td class="vt-elite">ELITE</td><td><div class="rep-bar">$190M<div class="rep-track"><div class="rep-fill" style="width:95%"></div></div></div></td><td>$1.00M</td><td class="green">98.0%</td><td class="right">18.5%</td></tr>
+        <tr><td><div class="vt-primary">Sentinel Capital</div><div class="vt-sub">138 markets</div></td><td class="vt-elite">ELITE</td><td><div class="rep-bar">$180M<div class="rep-track"><div class="rep-fill" style="width:90%"></div></div></div></td><td>$1.00M</td><td class="green">97.0%</td><td class="right">17.2%</td></tr>
+        <tr><td><div class="vt-primary">TruthNode Alpha</div><div class="vt-sub">120 markets</div></td><td class="vt-top">TOP</td><td><div class="rep-bar">$89M<div class="rep-track"><div class="rep-fill" style="width:89%"></div></div></div></td><td>$500K</td><td class="green">96.0%</td><td class="right">28.0%</td></tr>
+        <tr><td><div class="vt-primary">DataVerify</div><div class="vt-sub">98 markets</div></td><td class="vt-med">MEDIUM</td><td><div class="rep-bar">$25M<div class="rep-track"><div class="rep-fill" style="width:83%"></div></div></div></td><td>$500K</td><td class="green">92.0%</td><td class="right">55.0%</td></tr>
+        <tr><td><div class="vt-primary" style="color:var(--text)">NovaResolve</div><div class="vt-sub">12 markets</div></td><td class="vt-new">NEW</td><td><div class="rep-bar" style="color:#555">$600K<div class="rep-track"><div class="rep-fill" style="width:60%"></div></div></div></td><td>$500K</td><td style="color:#555">78.0%</td><td class="right">145.0%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="hr">
+
+<!-- ROADMAP -->
+<section>
+  <div class="section-head">Deployment Schedule</div>
+  <h2>Roadmap</h2>
+  <div class="rm-line">
+    <div class="rm-item"><div class="rm-dot"></div><div class="rm-q">Q2 2026</div><h3>UMA Hub</h3><p>Aggregation. 2x rewards.</p></div>
+    <div class="rm-item"><div class="rm-dot"></div><div class="rm-q">Q3 2026</div><h3>Limitless</h3><p>First live client on Base.</p></div>
+    <div class="rm-item"><div class="rm-dot"></div><div class="rm-q">Q4 2026</div><h3>Expansion</h3><p>Probabal, Opinion.</p></div>
+    <div class="rm-item"><div class="rm-dot"></div><div class="rm-q">2027</div><h3>Polymarket</h3><p>Replace UMA.</p></div>
+  </div>
+</section>
+
+<hr class="hr">
+
+<div class="foot-cta">
+  <h2>Explore the live demo</h2>
+  <p>1,000 voters. 149 real markets. Deterministic simulation.</p>
+  <div class="hero-ctas" style="justify-content:center">
+    <a href="#" class="btn-term">> explore_vaults</a>
+    <a href="#" class="btn-ghost">> view_activity</a>
+  </div>
+</div>
+
+<footer>
+  <span>POLYLIQUID // 2026</span>
+  <span>7 formulas // 11 params // R1 + DAO</span>
+  <a href="#">polyliquid.ai</a>
+</footer>
+
+</body>
+</html>

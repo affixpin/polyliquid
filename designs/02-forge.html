@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polyliquid — Forge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;0,6..96,800;1,6..96,400&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --base: #0c0a09;
+    --surface: #1a1714;
+    --surface2: #231f1a;
+    --border: #2e2820;
+    --text: #f5f0e8;
+    --muted: #8c8070;
+    --gold: #d4a843;
+    --gold-dim: rgba(212, 168, 67, 0.08);
+    --gold-mid: rgba(212, 168, 67, 0.25);
+    --gold-bright: #e8c65a;
+    --danger: #dc4a4a;
+    --success: #5cb563;
+    --serif: 'Bodoni Moda', 'Didot', Georgia, serif;
+    --sans: 'Manrope', system-ui, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--base);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* HEXAGONAL BACKGROUND PATTERN */
+  .hex-bg {
+    position: fixed; inset: 0; z-index: -1;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100' fill='none' stroke='%23d4a843' stroke-width='1'/%3E%3Cpath d='M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34' fill='none' stroke='%23d4a843' stroke-width='1'/%3E%3C/svg%3E");
+    background-size: 56px 100px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes goldShimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+  @keyframes barGrow {
+    from { width: 0; }
+  }
+  .anim-l { opacity: 0; animation: slideInLeft 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .anim-r { opacity: 0; animation: slideInRight 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .anim-u { opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .d1 { animation-delay: 0.1s; } .d2 { animation-delay: 0.25s; }
+  .d3 { animation-delay: 0.4s; } .d4 { animation-delay: 0.55s; }
+  .d5 { animation-delay: 0.7s; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 56px; height: 72px;
+    background: rgba(12, 10, 9, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-brand {
+    font-family: var(--serif);
+    font-size: 26px; font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+  .nav-brand span {
+    background: linear-gradient(90deg, var(--gold), var(--gold-bright), var(--gold));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: goldShimmer 4s linear infinite;
+  }
+  .nav-links { display: flex; gap: 36px; }
+  .nav-links a {
+    font-size: 13px; color: var(--muted);
+    text-decoration: none; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute;
+    bottom: -4px; left: 0; right: 0;
+    height: 1px; background: var(--gold);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+  .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+
+  /* HERO — asymmetric split */
+  .hero {
+    padding: 160px 0 0;
+    display: grid; grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+  }
+  .hero-left {
+    padding: 80px 56px 80px 80px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .hero-right {
+    display: flex; align-items: center; justify-content: center;
+    padding: 80px;
+    position: relative;
+  }
+  .hero-right::before {
+    content: '';
+    position: absolute; inset: 40px;
+    border: 1px solid var(--border);
+    transform: rotate(2deg);
+  }
+  .hero-eyebrow {
+    font-size: 12px; color: var(--gold);
+    text-transform: uppercase; letter-spacing: 0.2em;
+    font-weight: 700; margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: 60px; font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 28px;
+  }
+  .hero h1 em {
+    font-style: italic; color: var(--gold);
+  }
+  .hero-sub {
+    font-size: 16px; color: var(--muted);
+    line-height: 1.8; margin-bottom: 40px;
+    max-width: 440px;
+  }
+  .hero-ctas { display: flex; gap: 16px; }
+  .btn-gold {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+    color: var(--base); font-weight: 700; font-size: 13px;
+    border: none; border-radius: 2px; cursor: pointer;
+    text-decoration: none; text-transform: uppercase;
+    letter-spacing: 0.06em;
+    box-shadow: 0 4px 24px rgba(212, 168, 67, 0.25);
+    transition: all 0.3s;
+  }
+  .btn-gold:hover { box-shadow: 0 4px 32px rgba(212, 168, 67, 0.4); transform: translateY(-1px); }
+  .btn-frame {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 32px;
+    background: transparent;
+    color: var(--text); font-weight: 600; font-size: 13px;
+    border: 1px solid var(--border); border-radius: 2px;
+    cursor: pointer; text-decoration: none;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    transition: border-color 0.3s;
+  }
+  .btn-frame:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* HERO COMPARISON CARD */
+  .comp-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 48px; width: 100%;
+    position: relative; z-index: 1;
+  }
+  .comp-card::before {
+    content: '';
+    position: absolute; top: -1px; left: 32px; right: 32px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .comp-card .heading {
+    font-family: var(--serif);
+    font-size: 14px; font-style: italic;
+    color: var(--muted); margin-bottom: 32px;
+  }
+  .comp-row {
+    display: flex; align-items: baseline; gap: 20px;
+    margin-bottom: 20px;
+  }
+  .comp-who {
+    width: 80px; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--muted); font-weight: 600;
+  }
+  .comp-val {
+    font-family: var(--serif);
+    font-size: 48px; font-weight: 400;
+    line-height: 1;
+  }
+  .comp-val.weak { color: var(--muted); }
+  .comp-val.strong { color: var(--gold); }
+  .comp-bar {
+    height: 8px; background: var(--surface2);
+    margin: 4px 0 24px;
+    overflow: hidden;
+  }
+  .comp-bar-fill {
+    height: 100%;
+    animation: barGrow 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .comp-bar-fill.uma { width: 2%; background: var(--muted); }
+  .comp-bar-fill.poly {
+    width: 100%;
+    background: linear-gradient(90deg, var(--gold-mid), var(--gold));
+    animation-delay: 0.3s;
+  }
+  .comp-result {
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  .comp-result .num {
+    font-family: var(--serif);
+    font-size: 44px; font-weight: 700;
+    color: var(--gold);
+  }
+  .comp-result .txt {
+    font-size: 14px; color: var(--muted);
+  }
+
+  /* DIAGONAL DIVIDER */
+  .diag-divider {
+    height: 80px;
+    background: linear-gradient(to bottom right, var(--base) 49.5%, var(--surface) 50.5%);
+  }
+  .diag-divider.reverse {
+    background: linear-gradient(to bottom left, var(--surface) 49.5%, var(--base) 50.5%);
+  }
+
+  /* DARK SECTIONS */
+  .dark-section {
+    background: var(--surface);
+    padding: 80px;
+  }
+  .dark-section .section-label {
+    font-family: var(--serif);
+    font-size: 13px; font-style: italic;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .dark-section h2 {
+    font-family: var(--serif);
+    font-size: 42px; font-weight: 400;
+    margin-bottom: 16px;
+  }
+  .dark-section .desc {
+    font-size: 15px; color: var(--muted);
+    max-width: 500px; margin-bottom: 48px;
+    line-height: 1.8;
+  }
+
+  /* LIGHT SECTIONS */
+  .section {
+    padding: 80px;
+  }
+  .section .section-label {
+    font-family: var(--serif);
+    font-size: 13px; font-style: italic;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .section h2 {
+    font-family: var(--serif);
+    font-size: 42px; font-weight: 400;
+    margin-bottom: 16px;
+  }
+  .section .desc {
+    font-size: 15px; color: var(--muted);
+    max-width: 500px; margin-bottom: 48px;
+    line-height: 1.8;
+  }
+
+  /* STEPS — overlapping cards */
+  .steps-stack {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0;
+  }
+  .stp {
+    padding: 40px;
+    border: 1px solid var(--border);
+    background: var(--base);
+    margin-right: -1px;
+    transition: all 0.4s;
+    position: relative;
+  }
+  .stp:hover {
+    background: var(--surface2);
+    z-index: 1;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+  .stp-num {
+    font-family: var(--serif);
+    font-size: 72px; font-weight: 400;
+    color: var(--border);
+    line-height: 1; margin-bottom: 16px;
+    transition: color 0.4s;
+  }
+  .stp:hover .stp-num { color: var(--gold-mid); }
+  .stp h3 {
+    font-family: var(--serif);
+    font-size: 22px; font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .stp p { font-size: 14px; color: var(--muted); line-height: 1.8; }
+
+  /* POWER — angled layout */
+  .power-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+    align-items: center;
+  }
+  .power-bars { display: flex; flex-direction: column; gap: 16px; }
+  .pw-row {
+    display: grid; grid-template-columns: 100px 1fr 48px;
+    gap: 16px; align-items: center;
+  }
+  .pw-name {
+    font-family: var(--serif);
+    font-size: 16px; font-weight: 500;
+  }
+  .pw-track {
+    height: 28px; background: var(--base);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .pw-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+  }
+  .pw-pct {
+    font-family: var(--serif);
+    font-size: 18px; font-weight: 600;
+    text-align: right;
+  }
+  .power-insight {
+    font-family: var(--serif);
+    font-size: 28px; font-weight: 400;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--muted);
+    border-left: 2px solid var(--gold);
+    padding-left: 32px;
+  }
+  .power-insight strong { color: var(--gold); font-weight: 500; font-style: normal; }
+
+  /* ECONOMICS */
+  .eco-cards {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  }
+  .eco-card {
+    padding: 32px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    transition: border-color 0.3s;
+  }
+  .eco-card:hover { border-color: var(--gold-mid); }
+  .eco-tier {
+    font-family: var(--serif);
+    font-size: 18px; font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .eco-tier.elite { color: var(--gold); }
+  .eco-tier.top { color: #c084fc; }
+  .eco-tier.medium { color: #93c5fd; }
+  .eco-tier.newcomer { color: var(--muted); }
+  .eco-row {
+    display: flex; justify-content: space-between;
+    padding: 6px 0; font-size: 13px;
+    border-bottom: 1px solid var(--border);
+  }
+  .eco-row:last-child { border-bottom: none; }
+  .eco-row .k { color: var(--muted); }
+  .eco-row .v { font-weight: 600; }
+  .eco-income {
+    font-family: var(--serif);
+    font-size: 28px; font-weight: 500;
+    margin-top: 16px; padding-top: 16px;
+    border-top: 1px solid var(--gold-mid);
+  }
+
+  /* VAULT TABLE */
+  .vault-wrap {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .vault-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .vault-top h3 {
+    font-family: var(--serif);
+    font-size: 20px; font-weight: 500;
+  }
+  .vf-grp { display: flex; gap: 4px; }
+  .vf-b {
+    padding: 6px 14px;
+    font-size: 12px; font-weight: 600;
+    border: 1px solid var(--border);
+    background: transparent; color: var(--muted);
+    cursor: pointer; transition: all 0.2s;
+    text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .vf-b.on {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-dim);
+  }
+  .vtb { width: 100%; border-collapse: collapse; }
+  .vtb th {
+    font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--muted);
+    padding: 12px 24px; text-align: left;
+    font-weight: 600; border-bottom: 1px solid var(--border);
+  }
+  .vtb td {
+    padding: 16px 24px; font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .vtb tr:last-child td { border-bottom: none; }
+  .vtb tr { transition: background 0.2s; }
+  .vtb tr:hover td { background: var(--surface2); }
+  .vt-n { display: flex; align-items: center; gap: 12px; }
+  .vt-av {
+    width: 32px; height: 32px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-size: 12px; color: var(--muted);
+  }
+  .vt-primary { font-weight: 600; }
+  .vt-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .tb { font-family: var(--serif); font-size: 13px; font-weight: 500; }
+  .tb.elite { color: var(--gold); }
+  .tb.top { color: #c084fc; }
+  .tb.medium { color: #93c5fd; }
+  .tb.newcomer { color: var(--muted); }
+  .rep-bar { display: flex; align-items: center; gap: 8px; }
+  .rep-track { width: 48px; height: 3px; background: var(--border); overflow: hidden; }
+  .rep-fill { height: 100%; background: var(--gold); }
+  .green { color: var(--success); }
+  .right { text-align: right; }
+  .mono { font-variant-numeric: tabular-nums; }
+
+  /* ROADMAP */
+  .rm-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+  }
+  .rm-item {
+    padding: 36px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .rm-item:last-child { border-right: none; }
+  .rm-item::before {
+    content: '';
+    position: absolute; top: 0; left: 36px;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+  .rm-q {
+    font-family: var(--serif);
+    font-size: 13px; font-style: italic;
+    color: var(--gold); margin-bottom: 12px;
+    margin-top: 16px;
+  }
+  .rm-item h3 {
+    font-family: var(--serif);
+    font-size: 18px; font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .rm-item p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+  /* FOOTER */
+  .foot-cta {
+    text-align: center; padding: 80px;
+  }
+  .foot-cta h2 {
+    font-family: var(--serif);
+    font-size: 36px; font-weight: 400;
+    margin-bottom: 16px;
+  }
+  .foot-cta p { color: var(--muted); margin-bottom: 32px; }
+
+  footer {
+    padding: 24px 56px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between;
+    font-size: 12px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  footer a { color: var(--gold); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="hex-bg"></div>
+
+<nav>
+  <div class="nav-brand">POLY<span>LIQUID</span></div>
+  <div class="nav-links">
+    <a href="#" class="active">Home</a>
+    <a href="#vaults">Vaults</a>
+    <a href="#">Activity</a>
+  </div>
+</nav>
+
+<!-- HERO — asymmetric -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow anim-l d1">Reputation Oracle</div>
+    <h1 class="anim-l d2">Money can be<br>bought instantly.<br><em>Trust cannot.</em></h1>
+    <p class="hero-sub anim-l d3">The resolution layer for prediction markets. Vote weight is forged over months of correct decisions.</p>
+    <div class="hero-ctas anim-l d4">
+      <a href="#vaults" class="btn-gold">Explore Vaults &rarr;</a>
+      <a href="#" class="btn-frame">View Activity</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="comp-card anim-r d2">
+      <div class="heading">Attack Cost Comparison</div>
+      <div class="comp-row">
+        <div class="comp-who">UMA</div>
+        <div class="comp-val weak">$750</div>
+      </div>
+      <div class="comp-bar"><div class="comp-bar-fill uma"></div></div>
+      <div class="comp-row">
+        <div class="comp-who">Polyliquid</div>
+        <div class="comp-val strong">$10.71M</div>
+      </div>
+      <div class="comp-bar"><div class="comp-bar-fill poly"></div></div>
+      <div class="comp-result">
+        <div class="num">14,700&times;</div>
+        <div class="txt">more expensive<br>to attack</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="diag-divider"></div>
+
+<!-- PROBLEM -->
+<div class="dark-section">
+  <div class="section-label">The Problem</div>
+  <h2>Oracles are the weakest link</h2>
+  <div class="desc">UMA uses token-weighted voting. A whale can purchase influence in a single transaction. The system has been exploited repeatedly &mdash; $7M in March 2025, $160M in July 2025.</div>
+</div>
+
+<div class="diag-divider reverse"></div>
+
+<!-- HOW IT WORKS -->
+<div class="section">
+  <div class="section-label">How It Works</div>
+  <h2>Three layers of security</h2>
+  <div class="desc">Delegation, consensus, and dispute resolution.</div>
+  <div class="steps-stack">
+    <div class="stp anim-u d1">
+      <div class="stp-num">1</div>
+      <h3>LP Delegation</h3>
+      <p>LPs choose voters by track record. Commission: 5&ndash;80%. Higher reputation means lower risk for LPs.</p>
+    </div>
+    <div class="stp anim-u d2">
+      <div class="stp-num">2</div>
+      <h3>Commit-Reveal</h3>
+      <p>Encrypted votes, then reveal. Weight = Stake &times; Rep. 99% of markets resolve in 8 hours.</p>
+    </div>
+    <div class="stp anim-u d3">
+      <div class="stp-num">3</div>
+      <h3>DAO Dispute</h3>
+      <p>2% bond to dispute. DAO votes 48h. Attackers lose everything. Correct voters are rewarded.</p>
+    </div>
+  </div>
+</div>
+
+<div class="diag-divider"></div>
+
+<!-- POWER -->
+<div class="dark-section">
+  <div class="section-label">Power Distribution</div>
+  <h2>No single group dominates</h2>
+  <div class="desc">&kappa; = 1.0. Linear. Sybil-neutral.</div>
+  <div class="power-grid">
+    <div class="power-bars">
+      <div class="pw-row"><div class="pw-name">Elite</div><div class="pw-track"><div class="pw-fill" style="width:88%"></div></div><div class="pw-pct">30%</div></div>
+      <div class="pw-row"><div class="pw-name">Top</div><div class="pw-track"><div class="pw-fill" style="width:88%"></div></div><div class="pw-pct">30%</div></div>
+      <div class="pw-row"><div class="pw-name">Medium</div><div class="pw-track"><div class="pw-fill" style="width:100%"></div></div><div class="pw-pct">34%</div></div>
+      <div class="pw-row"><div class="pw-name">Newcomer</div><div class="pw-track"><div class="pw-fill" style="width:17%"></div></div><div class="pw-pct">6%</div></div>
+    </div>
+    <div class="power-insight">
+      A whale with <strong>$10M</strong> in capital and zero reputation has exactly <strong>0%</strong> voting power.
+      Influence must be earned.
+    </div>
+  </div>
+</div>
+
+<div class="diag-divider reverse"></div>
+
+<!-- ECONOMICS -->
+<div class="section">
+  <div class="section-label">Economics</div>
+  <h2>A spectrum of risk and return</h2>
+  <div class="desc">Like bonds versus startup equity.</div>
+  <div class="eco-cards">
+    <div class="eco-card">
+      <div class="eco-tier elite">Elite</div>
+      <div class="eco-row"><span class="k">Stake</span><span class="v">$1M</span></div>
+      <div class="eco-row"><span class="k">Slash</span><span class="v">0.5%</span></div>
+      <div class="eco-row"><span class="k">Comm.</span><span class="v">80%</span></div>
+      <div class="eco-row"><span class="k">LP APY</span><span class="v">15&ndash;20%</span></div>
+      <div class="eco-income">$768K/yr</div>
+    </div>
+    <div class="eco-card">
+      <div class="eco-tier top">Top</div>
+      <div class="eco-row"><span class="k">Stake</span><span class="v">$500K</span></div>
+      <div class="eco-row"><span class="k">Slash</span><span class="v">1.25%</span></div>
+      <div class="eco-row"><span class="k">Comm.</span><span class="v">60%</span></div>
+      <div class="eco-row"><span class="k">LP APY</span><span class="v">25&ndash;35%</span></div>
+      <div class="eco-income">$144K/yr</div>
+    </div>
+    <div class="eco-card">
+      <div class="eco-tier medium">Medium</div>
+      <div class="eco-row"><span class="k">Stake</span><span class="v">$500K</span></div>
+      <div class="eco-row"><span class="k">Slash</span><span class="v">5.2%</span></div>
+      <div class="eco-row"><span class="k">Comm.</span><span class="v">40%</span></div>
+      <div class="eco-row"><span class="k">LP APY</span><span class="v">50&ndash;70%</span></div>
+      <div class="eco-income">$40K/yr</div>
+    </div>
+    <div class="eco-card">
+      <div class="eco-tier newcomer">Newcomer</div>
+      <div class="eco-row"><span class="k">Stake</span><span class="v">$500K</span></div>
+      <div class="eco-row"><span class="k">Slash</span><span class="v">20%</span></div>
+      <div class="eco-row"><span class="k">Comm.</span><span class="v">5%</span></div>
+      <div class="eco-row"><span class="k">LP APY</span><span class="v">100&ndash;200%</span></div>
+      <div class="eco-income">$1.6K/yr</div>
+    </div>
+  </div>
+</div>
+
+<div class="diag-divider"></div>
+
+<!-- VAULTS -->
+<div class="dark-section" id="vaults">
+  <div class="section-label">Live Demo</div>
+  <h2>Voter Vaults</h2>
+  <div class="desc">The marketplace where LPs choose voters to back.</div>
+  <div class="vault-wrap">
+    <div class="vault-top">
+      <h3>All Vaults</h3>
+      <div class="vf-grp">
+        <button class="vf-b on">All</button>
+        <button class="vf-b">Elite</button>
+        <button class="vf-b">Top</button>
+        <button class="vf-b">Medium</button>
+      </div>
+    </div>
+    <table class="vtb">
+      <thead><tr><th>Voter</th><th>Tier</th><th>Reputation</th><th>TVL</th><th>Accuracy</th><th style="text-align:right">APR</th></tr></thead>
+      <tbody>
+        <tr><td><div class="vt-n"><div class="vt-av">AO</div><div><div class="vt-primary">Apex Oracle</div><div class="vt-sub">142 markets</div></div></div></td><td><span class="tb elite">Elite</span></td><td><div class="rep-bar"><span class="mono">$190M</span><div class="rep-track"><div class="rep-fill" style="width:95%"></div></div></div></td><td class="mono">$1.00M</td><td class="mono green">98.0%</td><td class="mono right">18.5%</td></tr>
+        <tr><td><div class="vt-n"><div class="vt-av">SC</div><div><div class="vt-primary">Sentinel Capital</div><div class="vt-sub">138 markets</div></div></div></td><td><span class="tb elite">Elite</span></td><td><div class="rep-bar"><span class="mono">$180M</span><div class="rep-track"><div class="rep-fill" style="width:90%"></div></div></div></td><td class="mono">$1.00M</td><td class="mono green">97.0%</td><td class="mono right">17.2%</td></tr>
+        <tr><td><div class="vt-n"><div class="vt-av">TA</div><div><div class="vt-primary">TruthNode Alpha</div><div class="vt-sub">120 markets</div></div></div></td><td><span class="tb top">Top</span></td><td><div class="rep-bar"><span class="mono">$89M</span><div class="rep-track"><div class="rep-fill" style="width:89%"></div></div></div></td><td class="mono">$500K</td><td class="mono green">96.0%</td><td class="mono right">28.0%</td></tr>
+        <tr><td><div class="vt-n"><div class="vt-av">DV</div><div><div class="vt-primary">DataVerify</div><div class="vt-sub">98 markets</div></div></div></td><td><span class="tb medium">Medium</span></td><td><div class="rep-bar"><span class="mono">$25M</span><div class="rep-track"><div class="rep-fill" style="width:83%"></div></div></div></td><td class="mono">$500K</td><td class="mono green">92.0%</td><td class="mono right">55.0%</td></tr>
+        <tr><td><div class="vt-n"><div class="vt-av">NR</div><div><div class="vt-primary">NovaResolve</div><div class="vt-sub">12 markets</div></div></div></td><td><span class="tb newcomer">New</span></td><td><div class="rep-bar"><span class="mono" style="color:var(--muted)">$600K</span><div class="rep-track"><div class="rep-fill" style="width:60%"></div></div></div></td><td class="mono">$500K</td><td class="mono" style="color:var(--muted)">78.0%</td><td class="mono right">145.0%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="diag-divider reverse"></div>
+
+<!-- ROADMAP -->
+<div class="section">
+  <div class="section-label">Roadmap</div>
+  <h2>From aggregator to oracle</h2>
+  <div class="desc">Four phases. Each proves the model at increasing scale.</div>
+  <div class="rm-row">
+    <div class="rm-item"><div class="rm-q">Q2 2026</div><h3>UMA Voter Hub</h3><p>Aggregation. 2&times; rewards. Build community.</p></div>
+    <div class="rm-item"><div class="rm-q">Q3 2026</div><h3>Limitless (Base)</h3><p>First live client. Subjective events. Agreement in place.</p></div>
+    <div class="rm-item"><div class="rm-q">Q4 2026</div><h3>Expansion</h3><p>Probabal, Opinion. Prove reliability.</p></div>
+    <div class="rm-item"><div class="rm-q">2027</div><h3>Polymarket</h3><p>Replace UMA. $10.71M vs $750.</p></div>
+  </div>
+</div>
+
+<div class="foot-cta">
+  <h2>Explore the live demo</h2>
+  <p>1,000 voters resolving 149 real markets from Limitless Exchange.</p>
+  <div class="hero-ctas" style="justify-content:center">
+    <a href="#" class="btn-gold">Explore Vaults &rarr;</a>
+    <a href="#" class="btn-frame">View Activity</a>
+  </div>
+</div>
+
+<footer>
+  <span>Polyliquid &copy; 2026</span>
+  <span>7 formulas &middot; 11 parameters &middot; R1 + DAO</span>
+  <a href="#">polyliquid.ai</a>
+</footer>
+
+</body>
+</html>

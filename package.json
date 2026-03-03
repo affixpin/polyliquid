@@ -1,0 +1,5 @@
+{
+  "name": "polyliquid",
+  "private": true,
+  "workspaces": ["packages/*"]
+}

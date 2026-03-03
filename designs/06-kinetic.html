@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polyliquid — Kinetic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Geist+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: 'Geist Mono';
+    src: local('Geist Mono');
+  }
+  :root {
+    --bg: #08080a;
+    --surface: rgba(255,255,255,0.03);
+    --surface-solid: #111114;
+    --border: rgba(255,255,255,0.06);
+    --border-hover: rgba(255,255,255,0.12);
+    --text-3: rgba(255,255,255,0.35);
+    --text-2: rgba(255,255,255,0.55);
+    --text-1: rgba(255,255,255,0.85);
+    --white: #ffffff;
+    --blue: #3b82f6;
+    --blue-bright: #60a5fa;
+    --blue-glow: rgba(59,130,246,0.15);
+    --blue-glow2: rgba(59,130,246,0.3);
+    --green: #22c55e;
+    --green-glow: rgba(34,197,94,0.12);
+    --red: #ef4444;
+    --red-glow: rgba(239,68,68,0.1);
+    --red-dim: rgba(239,68,68,0.6);
+    --amber: #f59e0b;
+    --sans: 'Instrument Sans', -apple-system, sans-serif;
+    --mono: 'Geist Mono', 'SF Mono', 'Fira Code', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text-2);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ——— GRAIN + NOISE ——— */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 10000;
+    pointer-events: none;
+    opacity: 0.018;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+  }
+
+  /* ——— ANIMATIONS ——— */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes countUp {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); filter: blur(4px); }
+    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  }
+  @keyframes pulseRing {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(2.5); opacity: 0; }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes breathe {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  @keyframes widen {
+    from { width: 0%; }
+  }
+  @keyframes orbitSlow {
+    0% { transform: rotate(0deg) translateX(300px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(300px) rotate(-360deg); }
+  }
+
+  .fu { opacity: 0; animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .fu1 { animation-delay: 0.05s; } .fu2 { animation-delay: 0.15s; }
+  .fu3 { animation-delay: 0.3s; } .fu4 { animation-delay: 0.45s; }
+  .fu5 { animation-delay: 0.6s; } .fu6 { animation-delay: 0.75s; }
+  .fu7 { animation-delay: 0.9s; } .fu8 { animation-delay: 1.05s; }
+
+  /* ——— NAV ——— */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 56px;
+    background: rgba(8, 8, 10, 0.8);
+    backdrop-filter: blur(24px) saturate(1.2);
+    border-bottom: 1px solid var(--border);
+  }
+  .n-left { display: flex; align-items: center; gap: 16px; }
+  .n-logo {
+    font-family: var(--mono);
+    font-size: 13px; font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.02em;
+  }
+  .n-badge {
+    font-family: var(--mono);
+    font-size: 9px; font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 3px;
+    background: var(--blue-glow);
+    color: var(--blue-bright);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .n-center { display: flex; gap: 4px; }
+  .n-center a {
+    font-size: 13px; font-weight: 500;
+    color: var(--text-3);
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+  .n-center a:hover { color: var(--text-1); }
+  .n-center a.on { color: var(--text-1); background: var(--surface); }
+  .n-right { display: flex; align-items: center; gap: 8px; }
+  .n-live {
+    font-family: var(--mono);
+    font-size: 11px; font-weight: 500;
+    color: var(--green);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .live-ring {
+    position: relative;
+    width: 8px; height: 8px;
+  }
+  .live-ring::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    background: var(--green);
+  }
+  .live-ring::after {
+    content: '';
+    position: absolute; inset: -2px;
+    border-radius: 50%;
+    border: 1px solid var(--green);
+    animation: pulseRing 2s ease-out infinite;
+  }
+
+  /* ——— HERO ——— */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 80px 40px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  /* Ambient orbs */
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .hero-orb.o1 {
+    width: 500px; height: 500px;
+    top: 10%; left: -10%;
+    background: radial-gradient(circle, rgba(59,130,246,0.08), transparent 70%);
+    animation: orbitSlow 40s linear infinite;
+  }
+  .hero-orb.o2 {
+    width: 400px; height: 400px;
+    bottom: 10%; right: -5%;
+    background: radial-gradient(circle, rgba(34,197,94,0.06), transparent 70%);
+    animation: orbitSlow 50s linear infinite reverse;
+  }
+
+  .hero-overline {
+    font-family: var(--mono);
+    font-size: 12px; font-weight: 500;
+    color: var(--text-3);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: 80px;
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+    color: var(--white);
+    margin-bottom: 24px;
+    max-width: 800px;
+  }
+  .hero h1 .gradient {
+    background: linear-gradient(135deg, var(--blue-bright), var(--green), var(--blue));
+    background-size: 200% 200%;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 6s ease infinite;
+  }
+  .hero-sub {
+    font-size: 18px;
+    color: var(--text-2);
+    max-width: 500px;
+    margin-bottom: 40px;
+    line-height: 1.7;
+  }
+  .hero-ctas { display: flex; gap: 12px; margin-bottom: 80px; }
+  .btn-glow {
+    font-family: var(--sans);
+    font-size: 14px; font-weight: 600;
+    padding: 12px 28px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-glow.primary {
+    background: var(--white);
+    color: var(--bg);
+  }
+  .btn-glow.primary::after {
+    content: '';
+    position: absolute; inset: -1px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, var(--blue), var(--green));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s;
+    filter: blur(8px);
+  }
+  .btn-glow.primary:hover { transform: translateY(-2px); }
+  .btn-glow.primary:hover::after { opacity: 1; }
+  .btn-glow.ghost {
+    background: transparent;
+    color: var(--text-2);
+    border: 1px solid var(--border);
+  }
+  .btn-glow.ghost:hover { border-color: var(--border-hover); color: var(--text-1); }
+
+  /* ——— HERO METRICS — the showstopper ——— */
+  .hero-metrics {
+    display: flex;
+    gap: 0;
+    position: relative;
+  }
+  .hero-metrics::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 17px;
+    background: linear-gradient(135deg, var(--border), rgba(59,130,246,0.15), var(--border), rgba(34,197,94,0.15), var(--border));
+    background-size: 300% 300%;
+    animation: gradientShift 8s ease infinite;
+    z-index: 0;
+  }
+  .hero-metrics-inner {
+    display: flex;
+    background: var(--surface-solid);
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+  .hm-cell {
+    padding: 24px 36px;
+    border-right: 1px solid var(--border);
+    text-align: center;
+    min-width: 140px;
+  }
+  .hm-cell:last-child { border-right: none; }
+  .hm-label {
+    font-family: var(--mono);
+    font-size: 10px; font-weight: 500;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .hm-val {
+    font-family: var(--mono);
+    font-size: 22px; font-weight: 700;
+    color: var(--white);
+  }
+  .hm-val.blue { color: var(--blue-bright); }
+  .hm-val.green { color: var(--green); }
+  .hm-val.red { color: var(--red-dim); }
+
+  /* ——— THE SPLIT — dramatic comparison ——— */
+  .the-split {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 70vh;
+  }
+  .split-side {
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 80px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .split-side.danger {
+    background: linear-gradient(135deg, #0c0506, #120808);
+  }
+  .split-side.danger::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(239,68,68,0.06), transparent 70%);
+  }
+  .split-side.safe {
+    background: linear-gradient(135deg, #060c08, #081210);
+  }
+  .split-side.safe::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(59,130,246,0.06), transparent 70%);
+  }
+  .split-tag {
+    font-family: var(--mono);
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center; gap: 6px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    width: fit-content;
+  }
+  .danger .split-tag { color: var(--red); background: var(--red-glow); }
+  .safe .split-tag { color: var(--blue-bright); background: var(--blue-glow); }
+  .split-amount {
+    font-family: var(--mono);
+    font-size: 96px;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .danger .split-amount { color: var(--red); }
+  .safe .split-amount { color: var(--white); }
+  .split-desc {
+    font-size: 16px;
+    color: var(--text-2);
+    max-width: 360px;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+  .split-bar {
+    height: 4px;
+    border-radius: 2px;
+    overflow: hidden;
+    max-width: 360px;
+  }
+  .danger .split-bar { background: rgba(239,68,68,0.1); }
+  .safe .split-bar { background: rgba(59,130,246,0.1); }
+  .split-bar-fill { height: 100%; border-radius: 2px; }
+  .danger .split-bar-fill {
+    width: 0.5%;
+    background: var(--red);
+    animation: widen 2s cubic-bezier(0.22,1,0.36,1) 0.5s forwards;
+  }
+  .safe .split-bar-fill {
+    width: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+    animation: widen 2s cubic-bezier(0.22,1,0.36,1) 0.8s forwards;
+  }
+  /* Center divider */
+  .split-divider {
+    position: absolute;
+    left: 50%; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, var(--border-hover), transparent);
+    z-index: 10;
+    transform: translateX(-50%);
+  }
+  .split-divider .badge {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--mono);
+    font-size: 14px; font-weight: 800;
+    padding: 10px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border-hover);
+    border-radius: 8px;
+    white-space: nowrap;
+    background: linear-gradient(135deg, var(--blue-bright), var(--green));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ——— SECTIONS ——— */
+  .sect {
+    max-width: 1100px; margin: 0 auto;
+    padding: 100px 40px;
+  }
+  .sect-tag {
+    font-family: var(--mono);
+    font-size: 11px; font-weight: 600;
+    color: var(--blue-bright);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+  .sect h2 {
+    font-size: 44px; font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .sect .sub {
+    font-size: 16px; color: var(--text-2);
+    max-width: 480px; margin-bottom: 56px;
+    line-height: 1.7;
+  }
+  .divider {
+    max-width: 1100px; margin: 0 auto;
+    padding: 0 40px;
+  }
+  .divider-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  /* ——— PROBLEM CARDS ——— */
+  .problems {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .prob-card {
+    background: var(--surface-solid);
+    padding: 32px;
+    position: relative;
+    transition: all 0.3s;
+  }
+  .prob-card:hover { background: #141418; }
+  .prob-idx {
+    font-family: var(--mono);
+    font-size: 10px; font-weight: 600;
+    color: var(--red);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+  }
+  .prob-card h3 {
+    font-family: var(--mono);
+    font-size: 32px; font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+  }
+  .prob-card p {
+    font-size: 13px;
+    color: var(--text-3);
+    line-height: 1.7;
+  }
+
+  /* ——— STEPS ——— */
+  .steps {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .step-card {
+    background: var(--surface-solid);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    position: relative;
+    transition: all 0.4s;
+    overflow: hidden;
+  }
+  .step-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .step-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+  .step-card:hover::before { opacity: 1; }
+  .step-num {
+    font-family: var(--mono);
+    font-size: 48px; font-weight: 800;
+    color: rgba(255,255,255,0.04);
+    line-height: 1;
+    margin-bottom: 16px;
+    letter-spacing: -0.04em;
+  }
+  .step-card h3 {
+    font-size: 18px; font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .step-card p {
+    font-size: 13px;
+    color: var(--text-3);
+    line-height: 1.7;
+  }
+
+  /* ——— POWER ——— */
+  .power-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 32px;
+    align-items: start;
+  }
+  .power-bars { display: flex; flex-direction: column; gap: 20px; }
+  .pbar {
+    display: grid;
+    grid-template-columns: 90px 50px 1fr 44px;
+    gap: 12px;
+    align-items: center;
+  }
+  .pbar-tier { font-weight: 600; font-size: 14px; }
+  .pbar-tier.t1 { color: var(--blue-bright); }
+  .pbar-tier.t2 { color: var(--green); }
+  .pbar-tier.t3 { color: var(--amber); }
+  .pbar-tier.t4 { color: var(--text-3); }
+  .pbar-count {
+    font-family: var(--mono);
+    font-size: 12px; color: var(--text-3);
+    text-align: right;
+  }
+  .pbar-track {
+    height: 10px; border-radius: 5px;
+    background: rgba(255,255,255,0.04);
+    overflow: hidden;
+  }
+  .pbar-fill {
+    height: 100%; border-radius: 5px;
+    animation: widen 1.5s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  .pbar-fill.f1 { width: 88%; background: linear-gradient(90deg, var(--blue), var(--blue-bright)); }
+  .pbar-fill.f2 { width: 88%; background: linear-gradient(90deg, #059669, var(--green)); }
+  .pbar-fill.f3 { width: 100%; background: linear-gradient(90deg, #d97706, var(--amber)); }
+  .pbar-fill.f4 { width: 18%; background: rgba(255,255,255,0.15); }
+  .pbar-pct {
+    font-family: var(--mono);
+    font-size: 15px; font-weight: 700;
+    color: var(--white);
+    text-align: right;
+  }
+
+  /* Whale card */
+  .whale-card {
+    background: var(--surface-solid);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .whale-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .whale-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--red);
+    animation: breathe 2s ease-in-out infinite;
+  }
+  .whale-header span {
+    font-family: var(--mono);
+    font-size: 11px; font-weight: 600;
+    color: var(--red);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .whale-body { padding: 24px; }
+  .whale-scenario {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .whale-result {
+    background: var(--red-glow);
+    border: 1px solid rgba(239,68,68,0.12);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .whale-result-val {
+    font-family: var(--mono);
+    font-size: 48px; font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.04em;
+  }
+  .whale-result-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--red);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+  .whale-formula {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-3);
+    text-align: center;
+    padding: 10px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 6px;
+  }
+  .whale-formula .hl { color: var(--red); }
+
+  /* ——— ECONOMICS ——— */
+  .eco-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .eco-card {
+    background: var(--surface-solid);
+    padding: 28px;
+    transition: background 0.3s;
+  }
+  .eco-card:hover { background: #141418; }
+  .eco-tier {
+    font-family: var(--mono);
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .eco-tier.e { color: var(--blue-bright); background: var(--blue-glow); }
+  .eco-tier.t { color: var(--green); background: var(--green-glow); }
+  .eco-tier.m { color: var(--amber); background: rgba(245,158,11,0.1); }
+  .eco-tier.n { color: var(--text-3); background: rgba(255,255,255,0.04); }
+  .eco-row {
+    display: flex; justify-content: space-between;
+    padding: 5px 0;
+    font-size: 13px;
+  }
+  .eco-row .l { color: var(--text-3); }
+  .eco-row .v { color: var(--text-1); font-weight: 500; }
+  .eco-income {
+    margin-top: 16px; padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .eco-income .label { font-size: 11px; color: var(--text-3); margin-bottom: 4px; }
+  .eco-income .amount {
+    font-family: var(--mono);
+    font-size: 24px; font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.02em;
+  }
+
+  /* ——— VAULT TABLE ——— */
+  .vault-box {
+    background: var(--surface-solid);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .vault-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .vault-title {
+    font-size: 14px; font-weight: 600;
+    color: var(--white);
+  }
+  .vf-row { display: flex; gap: 4px; }
+  .vf-btn {
+    font-family: var(--sans);
+    font-size: 12px; font-weight: 500;
+    padding: 4px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-3);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .vf-btn:hover { border-color: var(--border-hover); }
+  .vf-btn.on {
+    color: var(--blue-bright);
+    border-color: rgba(59,130,246,0.25);
+    background: var(--blue-glow);
+  }
+  .vt { width: 100%; border-collapse: collapse; }
+  .vt th {
+    font-family: var(--mono);
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    padding: 10px 24px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .vt td {
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .vt tr:last-child td { border-bottom: none; }
+  .vt tr { transition: background 0.15s; }
+  .vt tr:hover td { background: rgba(255,255,255,0.015); }
+  .vt-name { color: var(--white); font-weight: 600; }
+  .vt-sub {
+    font-family: var(--mono);
+    font-size: 11px; color: var(--text-3);
+    margin-top: 2px;
+  }
+  .tbadge {
+    font-family: var(--mono);
+    font-size: 10px; font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .tbadge.e { color: var(--blue-bright); background: var(--blue-glow); }
+  .tbadge.t { color: var(--green); background: var(--green-glow); }
+  .tbadge.m { color: var(--amber); background: rgba(245,158,11,0.1); }
+  .tbadge.n { color: var(--text-3); background: rgba(255,255,255,0.04); }
+  .rep { display: flex; align-items: center; gap: 8px; }
+  .rep-val {
+    font-family: var(--mono);
+    font-size: 13px; color: var(--text-1);
+    white-space: nowrap;
+  }
+  .rep-bar { width: 44px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.06); }
+  .rep-fill { height: 100%; border-radius: 2px; background: var(--blue); }
+  .mono {
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  .c-green { color: var(--green); }
+  .c-dim { color: var(--text-3); }
+  .right { text-align: right; }
+
+  /* ——— ROADMAP ——— */
+  .rm-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .rm-card {
+    background: var(--surface-solid);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .rm-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+  .rm-card.now::before {
+    content: '';
+    position: absolute; top: -1px; left: -1px; right: -1px;
+    height: 3px;
+    border-radius: 12px 12px 0 0;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+  }
+  .rm-card .q {
+    font-family: var(--mono);
+    font-size: 11px; font-weight: 600;
+    color: var(--blue-bright);
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+  .rm-card h3 {
+    font-size: 18px; font-weight: 700;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .rm-card p {
+    font-size: 13px;
+    color: var(--text-3);
+    line-height: 1.6;
+  }
+
+  /* ——— CTA + FOOTER ——— */
+  .cta {
+    text-align: center;
+    padding: 100px 40px;
+    max-width: 1100px; margin: 0 auto;
+    position: relative;
+  }
+  .cta h2 {
+    font-size: 40px; font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+  .cta p {
+    font-size: 16px;
+    color: var(--text-3);
+    margin-bottom: 32px;
+  }
+  .cta .hero-ctas { justify-content: center; }
+
+  footer {
+    padding: 20px 40px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11px; color: var(--text-3);
+  }
+  footer a { color: var(--blue-bright); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="n-left">
+    <span class="n-logo">polyliquid</span>
+    <span class="n-badge">v1.0</span>
+  </div>
+  <div class="n-center">
+    <a href="#" class="on">Home</a>
+    <a href="#vaults">Vaults</a>
+    <a href="#activity">Activity</a>
+  </div>
+  <div class="n-right">
+    <div class="n-live"><div class="live-ring"></div> Live</div>
+  </div>
+</nav>
+
+<!-- ——— HERO ——— -->
+<section class="hero">
+  <div class="hero-orb o1"></div>
+  <div class="hero-orb o2"></div>
+
+  <div class="hero-overline fu fu1">Decentralized Reputation Oracle</div>
+  <h1 class="fu fu2">Money can be bought.<br><span class="gradient">Trust cannot.</span></h1>
+  <p class="hero-sub fu fu3">Vote weight = Stake &times; Reputation. Earned over months of correct resolutions. Cannot be purchased at any price.</p>
+  <div class="hero-ctas fu fu4">
+    <a href="#vaults" class="btn-glow primary">Explore Vaults</a>
+    <a href="#activity" class="btn-glow ghost">View Activity</a>
+  </div>
+
+  <div class="hero-metrics fu fu6">
+    <div class="hero-metrics-inner">
+      <div class="hm-cell">
+        <div class="hm-label">Voters</div>
+        <div class="hm-val blue">1,000</div>
+      </div>
+      <div class="hm-cell">
+        <div class="hm-label">Markets</div>
+        <div class="hm-val blue">149</div>
+      </div>
+      <div class="hm-cell">
+        <div class="hm-label">TVL</div>
+        <div class="hm-val green">$48.5M</div>
+      </div>
+      <div class="hm-cell">
+        <div class="hm-label">Attack Cost</div>
+        <div class="hm-val green">$10.71M</div>
+      </div>
+      <div class="hm-cell">
+        <div class="hm-label">Safety</div>
+        <div class="hm-val" style="background:linear-gradient(135deg,var(--blue-bright),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">14,700&times;</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ——— THE SPLIT ——— -->
+<div class="the-split">
+  <div class="split-side danger">
+    <div class="split-tag fu fu1">UMA Oracle</div>
+    <div class="split-amount fu fu2">$750</div>
+    <p class="split-desc fu fu3">Buy tokens. Vote. Profit. One transaction. The entire oracle can be corrupted for the price of a laptop.</p>
+    <div class="split-bar fu fu4"><div class="split-bar-fill"></div></div>
+  </div>
+  <div class="split-divider">
+    <div class="badge">14,700&times;</div>
+  </div>
+  <div class="split-side safe">
+    <div class="split-tag fu fu1">Polyliquid Oracle</div>
+    <div class="split-amount fu fu2">$10.71M</div>
+    <p class="split-desc fu fu3">Even with $10.71M, zero reputation means zero influence. R1 layer protects. DAO makes it infinite.</p>
+    <div class="split-bar fu fu4"><div class="split-bar-fill"></div></div>
+  </div>
+</div>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- ——— PROBLEM ——— -->
+<div class="sect">
+  <div class="sect-tag fu fu1">The Problem</div>
+  <h2 class="fu fu2">Oracles are the<br>weakest link</h2>
+  <p class="sub fu fu3">UMA uses token-weighted voting. Influence is purchased, not earned.</p>
+
+  <div class="problems fu fu4">
+    <div class="prob-card">
+      <div class="prob-idx">Attack vector</div>
+      <h3>$750</h3>
+      <p>Total cost to attack UMA. Buy tokens, vote, collect. Single transaction.</p>
+    </div>
+    <div class="prob-card">
+      <div class="prob-idx">March 2025</div>
+      <h3>$7M</h3>
+      <p>Whale manipulation of prediction market outcome. No consequences.</p>
+    </div>
+    <div class="prob-card">
+      <div class="prob-idx">July 2025</div>
+      <h3>$160M</h3>
+      <p>Largest prediction market dispute in history. Oracle credibility destroyed.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- ——— HOW IT WORKS ——— -->
+<div class="sect">
+  <div class="sect-tag fu fu1">How It Works</div>
+  <h2 class="fu fu2">Three layers of security</h2>
+  <p class="sub fu fu3">Each layer makes attacks exponentially harder.</p>
+
+  <div class="steps fu fu4">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <h3>LP Delegation</h3>
+      <p>LPs choose voters by track record and delegate capital. Commission 5&ndash;80%. Higher reputation = lower risk for LPs.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <h3>Commit-Reveal</h3>
+      <p>Encrypted votes, then reveal. Weight = Stake &times; Rep. 50% + 1 consensus. 99% resolve in 8 hours.</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <h3>DAO Dispute</h3>
+      <p>2% bond to challenge. DAO votes over 48h. Attackers lose everything. Correct voters rewarded.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- ——— POWER ——— -->
+<div class="sect">
+  <div class="sect-tag fu fu1">Power Distribution</div>
+  <h2 class="fu fu2">No single group dominates</h2>
+  <p class="sub fu fu3">&kappa; = 1.0. Linear weight. Sybil-neutral by design.</p>
+
+  <div class="power-grid fu fu4">
+    <div class="power-bars">
+      <div class="pbar">
+        <div class="pbar-tier t1">Elite</div>
+        <div class="pbar-count">10</div>
+        <div class="pbar-track"><div class="pbar-fill f1"></div></div>
+        <div class="pbar-pct">30%</div>
+      </div>
+      <div class="pbar">
+        <div class="pbar-tier t2">Top</div>
+        <div class="pbar-count">40</div>
+        <div class="pbar-track"><div class="pbar-fill f2"></div></div>
+        <div class="pbar-pct">30%</div>
+      </div>
+      <div class="pbar">
+        <div class="pbar-tier t3">Medium</div>
+        <div class="pbar-count">150</div>
+        <div class="pbar-track"><div class="pbar-fill f3"></div></div>
+        <div class="pbar-pct">34%</div>
+      </div>
+      <div class="pbar">
+        <div class="pbar-tier t4">Newcomer</div>
+        <div class="pbar-count">800</div>
+        <div class="pbar-track"><div class="pbar-fill f4"></div></div>
+        <div class="pbar-pct">6%</div>
+      </div>
+    </div>
+
+    <div class="whale-card">
+      <div class="whale-header">
+        <div class="whale-dot"></div>
+        <span>Whale Attack Scenario</span>
+      </div>
+      <div class="whale-body">
+        <p class="whale-scenario">A whale deposits <strong style="color:var(--white)">$10,000,000</strong> but has zero historical reputation.</p>
+        <div class="whale-result">
+          <div class="whale-result-val">0%</div>
+          <div class="whale-result-label">Voting Influence</div>
+        </div>
+        <div class="whale-formula">W = <span class="hl">$10M</span> &times; 0 rep = <span class="hl">0</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- ——— ECONOMICS ——— -->
+<div class="sect">
+  <div class="sect-tag fu fu1">Economics</div>
+  <h2 class="fu fu2">Risk &harr; Return</h2>
+  <p class="sub fu fu3">Higher reputation = lower slash, lower APY. Like bonds versus startup equity.</p>
+
+  <div class="eco-grid fu fu4">
+    <div class="eco-card">
+      <div class="eco-tier e">Elite</div>
+      <div class="eco-row"><span class="l">Stake</span><span class="v">$1M</span></div>
+      <div class="eco-row"><span class="l">Slash</span><span class="v">0.5%</span></div>
+      <div class="eco-row"><span class="l">Commission</span><span class="v">80%</span></div>
+      <div class="eco-row"><span class="l">LP APY</span><span class="v">15&ndash;20%</span></div>
+      <div class="eco-income"><div class="label">Annual income</div><div class="amount">$768K</div></div>
+    </div>
+    <div class="eco-card">
+      <div class="eco-tier t">Top</div>
+      <div class="eco-row"><span class="l">Stake</span><span class="v">$500K</span></div>
+      <div class="eco-row"><span class="l">Slash</span><span class="v">1.25%</span></div>
+      <div class="eco-row"><span class="l">Commission</span><span class="v">60%</span></div>
+      <div class="eco-row"><span class="l">LP APY</span><span class="v">25&ndash;35%</span></div>
+      <div class="eco-income"><div class="label">Annual income</div><div class="amount">$144K</div></div>
+    </div>
+    <div class="eco-card">
+      <div class="eco-tier m">Medium</div>
+      <div class="eco-row"><span class="l">Stake</span><span class="v">$500K</span></div>
+      <div class="eco-row"><span class="l">Slash</span><span class="v">5.2%</span></div>
+      <div class="eco-row"><span class="l">Commission</span><span class="v">40%</span></div>
+      <div class="eco-row"><span class="l">LP APY</span><span class="v">50&ndash;70%</span></div>
+      <div class="eco-income"><div class="label">Annual income</div><div class="amount">$40K</div></div>
+    </div>
+    <div class="eco-card">
+      <div class="eco-tier n">Newcomer</div>
+      <div class="eco-row"><span class="l">Stake</span><span class="v">$500K</span></div>
+      <div class="eco-row"><span class="l">Slash</span><span class="v">20%</span></div>
+      <div class="eco-row"><span class="l">Commission</span><span class="v">5%</span></div>
+      <div class="eco-row"><span class="l">LP APY</span><span class="v">100&ndash;200%</span></div>
+      <div class="eco-income"><div class="label">Annual income</div><div class="amount">$1.6K</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- ——— VAULTS ——— -->
+<div class="sect" id="vaults">
+  <div class="sect-tag fu fu1">Voter Vaults</div>
+  <h2 class="fu fu2">The marketplace</h2>
+  <p class="sub fu fu3">LPs browse voters by reputation, risk, and return.</p>
+
+  <div class="vault-box fu fu4">
+    <div class="vault-top">
+      <span class="vault-title">All Vaults</span>
+      <div class="vf-row">
+        <button class="vf-btn on">All</button>
+        <button class="vf-btn">Elite</button>
+        <button class="vf-btn">Top</button>
+        <button class="vf-btn">Medium</button>
+      </div>
+    </div>
+    <table class="vt">
+      <thead><tr><th>Voter</th><th>Tier</th><th>Reputation</th><th>TVL</th><th>Accuracy</th><th class="right">APR</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><div class="vt-name">Apex Oracle</div><div class="vt-sub">142 markets</div></td>
+          <td><span class="tbadge e">Elite</span></td>
+          <td><div class="rep"><span class="rep-val">$190M</span><div class="rep-bar"><div class="rep-fill" style="width:95%"></div></div></div></td>
+          <td><span class="mono">$1.00M</span></td>
+          <td><span class="mono c-green">98.0%</span></td>
+          <td class="right"><span class="mono">18.5%</span></td>
+        </tr>
+        <tr>
+          <td><div class="vt-name">Sentinel Capital</div><div class="vt-sub">138 markets</div></td>
+          <td><span class="tbadge e">Elite</span></td>
+          <td><div class="rep"><span class="rep-val">$180M</span><div class="rep-bar"><div class="rep-fill" style="width:90%"></div></div></div></td>
+          <td><span class="mono">$1.00M</span></td>
+          <td><span class="mono c-green">97.0%</span></td>
+          <td class="right"><span class="mono">17.2%</span></td>
+        </tr>
+        <tr>
+          <td><div class="vt-name">TruthNode Alpha</div><div class="vt-sub">120 markets</div></td>
+          <td><span class="tbadge t">Top</span></td>
+          <td><div class="rep"><span class="rep-val">$89M</span><div class="rep-bar"><div class="rep-fill" style="width:89%;background:var(--green)"></div></div></div></td>
+          <td><span class="mono">$500K</span></td>
+          <td><span class="mono c-green">96.0%</span></td>
+          <td class="right"><span class="mono">28.0%</span></td>
+        </tr>
+        <tr>
+          <td><div class="vt-name">ChainSight</div><div class="vt-sub">105 markets</div></td>
+          <td><span class="tbadge t">Top</span></td>
+          <td><div class="rep"><span class="rep-val">$72M</span><div class="rep-bar"><div class="rep-fill" style="width:72%;background:var(--green)"></div></div></div></td>
+          <td><span class="mono">$500K</span></td>
+          <td><span class="mono c-green">95.2%</span></td>
+          <td class="right"><span class="mono">31.0%</span></td>
+        </tr>
+        <tr>
+          <td><div class="vt-name">DataVerify</div><div class="vt-sub">98 markets</div></td>
+          <td><span class="tbadge m">Medium</span></td>
+          <td><div class="rep"><span class="rep-val">$25M</span><div class="rep-bar"><div class="rep-fill" style="width:83%;background:var(--amber)"></div></div></div></td>
+          <td><span class="mono">$500K</span></td>
+          <td><span class="mono c-green">92.0%</span></td>
+          <td class="right"><span class="mono">55.0%</span></td>
+        </tr>
+        <tr>
+          <td><div class="vt-name" style="color:var(--text-3)">NovaResolve</div><div class="vt-sub">12 markets</div></td>
+          <td><span class="tbadge n">New</span></td>
+          <td><div class="rep"><span class="rep-val c-dim">$600K</span><div class="rep-bar"><div class="rep-fill" style="width:60%;background:var(--text-3)"></div></div></div></td>
+          <td><span class="mono c-dim">$500K</span></td>
+          <td><span class="mono c-dim">78.0%</span></td>
+          <td class="right"><span class="mono">145%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- ——— ROADMAP ——— -->
+<div class="sect">
+  <div class="sect-tag fu fu1">Roadmap</div>
+  <h2 class="fu fu2">Four phases</h2>
+  <p class="sub fu fu3">From UMA aggregator to the standard oracle.</p>
+
+  <div class="rm-grid fu fu4">
+    <div class="rm-card now">
+      <div class="q">Q2 2026</div>
+      <h3>UMA Hub</h3>
+      <p>Voter aggregation. 2&times; rewards. First revenue.</p>
+    </div>
+    <div class="rm-card">
+      <div class="q">Q3 2026</div>
+      <h3>Limitless</h3>
+      <p>First live client on Base. Full oracle deployment.</p>
+    </div>
+    <div class="rm-card">
+      <div class="q">Q4 2026</div>
+      <h3>Expansion</h3>
+      <p>Probabal, Opinion. Multi-chain.</p>
+    </div>
+    <div class="rm-card">
+      <div class="q">2027</div>
+      <h3>Polymarket</h3>
+      <p>Replace UMA. Become the standard.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- ——— CTA ——— -->
+<div class="cta">
+  <h2 class="fu fu1">Explore the live simulation</h2>
+  <p class="fu fu2">1,000 voters. 149 real Limitless markets. Deterministic and reproducible.</p>
+  <div class="hero-ctas fu fu3">
+    <a href="#vaults" class="btn-glow primary">Explore Vaults</a>
+    <a href="#" class="btn-glow ghost">View Activity</a>
+  </div>
+</div>
+
+<footer>
+  <span>polyliquid &middot; 2026</span>
+  <span>7 formulas &middot; 11 params &middot; R1 + DAO</span>
+  <a href="#">polyliquid.ai</a>
+</footer>
+
+</body>
+</html>
