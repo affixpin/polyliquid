@@ -6,7 +6,6 @@ import {
   Infinity,
   Lock,
   AlertTriangle,
-  Layers,
   Scale,
   Coins,
   Rocket,
