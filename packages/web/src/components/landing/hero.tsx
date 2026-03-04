@@ -27,28 +27,30 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Compact card — just 3 numbers */}
+      {/* Compact card — attack cost comparison */}
       <div className="animate-fade-up md:animate-float bg-card border border-border rounded-xl overflow-hidden" style={{ animationDelay: "0.3s" }}>
-        <div className="px-5 md:px-8 py-8 md:py-10 border-b border-border text-center">
-          <div className="text-[14px] md:text-[15px] font-medium text-text-2 mb-4">Attack cost to corrupt oracle</div>
-          <div className="flex items-end justify-center gap-6 md:gap-10">
-            <div>
-              <div className="font-mono text-[30px] md:text-[40px] font-extrabold text-danger tracking-tight leading-none">$750</div>
-              <div className="text-[12px] text-text-3 mt-2">UMA</div>
-            </div>
-            <div className="text-[16px] text-text-3 pb-1 md:pb-2">vs</div>
-            <div>
-              <div className="font-mono text-[26px] md:text-[34px] font-extrabold text-success tracking-tight leading-none whitespace-nowrap">Infinite $</div>
-              <div className="text-[12px] text-text-3 mt-2">Polyliquid</div>
-            </div>
-          </div>
-        </div>
+        <div className="px-5 md:px-8 py-5 md:py-6 border-b border-border">
+          <div className="text-[18px] md:text-[20px] font-bold text-text-1 mb-4">Attack cost to corrupt oracle</div>
 
-        <div className="px-5 md:px-8 py-4 md:py-6 bg-brand/8 flex justify-between items-center">
-          <span className="text-[13px] md:text-[14px] font-medium text-text-2">Safety multiplier</span>
-          <span className="font-mono text-[32px] md:text-[44px] font-extrabold tracking-tight text-brand-bright">
-            &times;&infin;
-          </span>
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-danger bg-danger/10 px-2 py-0.5 rounded">UMA</span>
+            </div>
+            <div className="font-mono text-[28px] md:text-[34px] font-extrabold text-danger tracking-tight leading-none">$750–$2.5M</div>
+          </div>
+
+          <div className="flex items-center gap-3 my-3">
+            <div className="h-px bg-border flex-1" />
+            <span className="text-[11px] text-text-3 font-medium">vs</span>
+            <div className="h-px bg-border flex-1" />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-success bg-success/10 px-2 py-0.5 rounded">Polyliquid</span>
+            </div>
+            <div className="font-mono text-[28px] md:text-[34px] font-extrabold text-success tracking-tight leading-none">&gt; market size</div>
+          </div>
         </div>
       </div>
     </section>

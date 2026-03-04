@@ -10,9 +10,6 @@ export function CtaFooter() {
           <h2 className="text-[26px] md:text-[32px] font-bold tracking-tight text-text-1 mb-2">
             Explore the live simulation
           </h2>
-          <p className="text-[14px] text-text-3 mb-6">
-            1,000 voters &middot; 149 real markets &middot; Deterministic
-          </p>
           <div className="flex flex-col sm:flex-row justify-center gap-2.5">
             <Button asChild className="bg-brand hover:bg-brand/90 text-text-1 shadow-[0_2px_12px_var(--pl-brand-glow)] hover:shadow-[0_4px_20px_var(--pl-brand-glow-hover)] hover:-translate-y-px transition-all">
               <Link to="/vaults">Explore Vaults</Link>

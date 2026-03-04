@@ -7,7 +7,7 @@ export function TheSplit() {
         Security Comparison
       </div>
       <h2 className="text-[28px] md:text-[36px] font-bold tracking-tight text-text-1 leading-tight mb-2">
-        Why &times;&infin; safer
+        Why <span className="text-success">&gt; market size</span> ?
       </h2>
       <p className="text-[15px] text-text-2 max-w-[480px] mb-9">
         UMA lets anyone buy influence instantly. Polyliquid requires months of proven accuracy.
@@ -29,7 +29,7 @@ export function TheSplit() {
               <CompRow label="Influence model" uma="Token-weighted voting" />
               <CompRow label="Attack method" uma="Buy tokens → vote → profit" />
               <CompRow label="Time to influence" uma="Instant (1 transaction)" />
-              <CompRow label="Attack cost" uma="$750" highlight />
+              <CompRow label="Attack cost" uma="$750 – $2.5M" highlight />
               <CompRow label="Consequence" uma="Sell tokens, keep profit" />
             </div>
           </CardContent>
@@ -50,29 +50,12 @@ export function TheSplit() {
               <CompRow label="Influence model" poly="Stake &times; Reputation" />
               <CompRow label="Attack method" poly="Impossible without reputation" />
               <CompRow label="Time to influence" poly="Months of correct votes" />
-              <CompRow label="Attack cost" poly="Infinite $" highlight />
+              <CompRow label="Attack cost" poly="> market size" highlight />
               <CompRow label="Consequence" poly="Lose all stake + reputation" />
             </div>
           </CardContent>
         </Card>
       </div>
-
-      {/* Bottom bar — the multiplier */}
-      <Card className="bg-brand/8 border-brand/15 py-0 gap-0">
-        <CardContent className="px-5 md:px-6 py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-0">
-          <div>
-            <div className="text-[14px] font-medium text-text-1">
-              R1 layer protects up to <strong className="text-text-1">$11M</strong> in TVL
-            </div>
-            <div className="text-[13px] text-text-3">
-              If that's not enough, DAO dispute makes the cost of attack infinite.
-            </div>
-          </div>
-          <div className="font-mono text-[32px] md:text-[36px] font-extrabold tracking-tight text-brand-bright shrink-0">
-            &times;&infin;
-          </div>
-        </CardContent>
-      </Card>
     </section>
   );
 }

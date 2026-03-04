@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 
 const problems = [
-  { tag: "Attack Vector", value: "$750", desc: "Total cost to attack UMA. Buy tokens, vote, collect. Single transaction." },
+  { tag: "Attack Vector", value: "$750–$2.5M", desc: "$750 to manipulate a vote. $2.5M to attack the DAO — the historical cost of a real UMA dispute." },
   { tag: "Mar 2025", value: "$7M", desc: "Whale manipulation of prediction market outcome. No consequences." },
   { tag: "Jul 2025", value: "$160M", desc: "Largest prediction market dispute in history. Oracle credibility destroyed." },
 ];
