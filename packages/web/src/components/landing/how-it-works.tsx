@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 
 const steps = [
-  { n: "Layer 1", title: "LP Delegation", desc: "LPs choose voters by track record. Delegate capital. Commission 5\u201380%. Higher reputation = lower risk." },
+  { n: "Layer 1", title: "LP Delegation", desc: "LPs choose voters by track record. Delegate capital. Commission 0\u201399%, set by free market. Higher reputation = more delegation." },
   { n: "Layer 2", title: "Commit-Reveal", desc: "Encrypted votes, then reveal. W = Stake \u00d7 Rep. Consensus at 50% + 1. 99% resolve in 8h." },
   { n: "Layer 3", title: "DAO Dispute", desc: "2% bond to challenge. DAO votes 48h. Attackers lose everything. Correct voters rewarded." },
 ];

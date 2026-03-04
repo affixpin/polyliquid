@@ -1,9 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 
 const problems = [
-  { tag: "Attack Vector", value: "$750–$2.5M", desc: "$750 to manipulate a vote. $2.5M to attack the DAO — the historical cost of a real UMA dispute." },
-  { tag: "Mar 2025", value: "$7M", desc: "Whale manipulation of prediction market outcome. No consequences." },
-  { tag: "Jul 2025", value: "$160M", desc: "Largest prediction market dispute in history. Oracle credibility destroyed." },
+  { tag: "Attack Vector", value: "$750 + $2.5M", desc: "$750 in transaction costs plus 5M UMA tokens (~$2.5M) — the estimated cost to influence a token-weighted oracle." },
+  { tag: "Mar 2025", value: "$7M", desc: "A large token holder influenced a prediction market resolution. $7M in trader losses." },
+  { tag: "Jul 2025", value: "$242M", desc: "$242M market volume disputed. Top 10 token holders controlled 30% of votes. Highlighted structural vulnerability." },
 ];
 
 export function Problems() {
@@ -15,7 +15,7 @@ export function Problems() {
           Oracles are the weakest link
         </h2>
         <p className="text-[15px] text-text-2 max-w-[460px] mb-9">
-          UMA uses token-weighted voting. Influence is purchased, not earned.
+          Token-weighted oracles allow influence to be purchased, not earned.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">

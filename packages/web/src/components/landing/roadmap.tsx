@@ -1,10 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 
 const phases = [
-  { q: "Q2 2026", title: "UMA Hub", desc: "Voter aggregation. 2\u00d7 rewards. First revenue.", current: true },
-  { q: "Q3 2026", title: "Limitless", desc: "First live client on Base.", current: false },
-  { q: "Q4 2026", title: "Expansion", desc: "Probabal, Opinion. Multi-chain.", current: false },
-  { q: "2027", title: "Polymarket", desc: "Replace UMA. The standard.", current: false },
+  { q: "Q2 2026", title: "Testnet + Pilot", desc: "Oracle integration on Base testnet. Pilot with 10\u201320 subjective markets.", current: true },
+  { q: "Q2\u2013Q3 2026", title: "Live Subjective", desc: "All subjective markets resolved via Polyliquid. Revenue from bonds and slashes.", current: false },
+  { q: "Q3 2026", title: "Permissionless", desc: "Open permissionless market creation. Polyliquid scales without limits.", current: false },
 ];
 
 export function Roadmap() {
@@ -12,13 +11,13 @@ export function Roadmap() {
     <section className="max-w-[1140px] mx-auto px-4 md:px-8 py-12 md:py-16">
       <div className="font-mono text-[11px] font-semibold text-brand-bright uppercase tracking-wide mb-2">Roadmap</div>
       <h2 className="text-[28px] md:text-[36px] font-bold tracking-tight text-text-1 leading-tight mb-2">
-        Four phases
+        Three stages
       </h2>
       <p className="text-[15px] text-text-2 max-w-[460px] mb-9">
-        From UMA aggregator to the standard oracle.
+        From testnet to full autonomy.
       </p>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {phases.map((p) => (
           <Card key={p.q} className="group bg-surface border-border hover:border-border-bright hover:-translate-y-0.5 transition-all relative overflow-hidden py-0">
             {p.current && (

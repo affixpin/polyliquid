@@ -1,9 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 
 const tiers = [
-  { label: "Elite", cls: "text-brand-bright bg-brand/12", stake: "$1M", slash: "0.5%", comm: "80%", apy: "15\u201320%", income: "$768K" },
-  { label: "Top", cls: "text-success bg-success/10", stake: "$500K", slash: "1.25%", comm: "60%", apy: "25\u201335%", income: "$144K" },
-  { label: "Medium", cls: "text-amber bg-amber/10", stake: "$500K", slash: "5.2%", comm: "40%", apy: "50\u201370%", income: "$40K" },
+  { label: "Elite", cls: "text-brand-bright bg-brand/12", stake: "$1M", slash: "20%", comm: "80%", apy: "15\u201320%", income: "$768K" },
+  { label: "Top", cls: "text-success bg-success/10", stake: "$500K", slash: "20%", comm: "60%", apy: "25\u201335%", income: "$144K" },
+  { label: "Medium", cls: "text-amber bg-amber/10", stake: "$500K", slash: "20%", comm: "40%", apy: "50\u201370%", income: "$40K" },
   { label: "Newcomer", cls: "text-text-3 bg-muted", stake: "$500K", slash: "20%", comm: "5%", apy: "100\u2013200%", income: "$1.6K" },
 ];
 
@@ -16,7 +16,7 @@ export function Economics() {
           Risk &harr; Return
         </h2>
         <p className="text-[15px] text-text-2 max-w-[460px] mb-9">
-          Higher reputation = lower slash, lower APY. Bonds vs startup equity.
+          Higher reputation = more LP delegation, more income. 20% flat slash for all tiers.
         </p>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

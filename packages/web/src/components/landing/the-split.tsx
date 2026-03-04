@@ -29,7 +29,7 @@ export function TheSplit() {
               <CompRow label="Influence model" uma="Token-weighted voting" />
               <CompRow label="Attack method" uma="Buy tokens → vote → profit" />
               <CompRow label="Time to influence" uma="Instant (1 transaction)" />
-              <CompRow label="Attack cost" uma="$750 – $2.5M" highlight />
+              <CompRow label="Attack cost" uma="$750 + $2.5M" highlight />
               <CompRow label="Consequence" uma="Sell tokens, keep profit" />
             </div>
           </CardContent>
