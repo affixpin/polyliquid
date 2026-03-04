@@ -36,7 +36,7 @@ export function Hero() {
             <div className="flex items-center gap-2">
               <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-danger bg-danger/10 px-2 py-0.5 rounded">UMA</span>
             </div>
-            <div className="font-mono text-[28px] md:text-[34px] font-extrabold text-danger tracking-tight leading-none">$750–$2.5M</div>
+            <div className="font-mono text-[22px] md:text-[34px] font-extrabold text-danger tracking-tight leading-none whitespace-nowrap">$750–$2.5M</div>
           </div>
 
           <div className="flex items-center gap-3 my-3">
@@ -49,7 +49,7 @@ export function Hero() {
             <div className="flex items-center gap-2">
               <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-success bg-success/10 px-2 py-0.5 rounded">Polyliquid</span>
             </div>
-            <div className="font-mono text-[28px] md:text-[34px] font-extrabold text-success tracking-tight leading-none">&gt; market size</div>
+            <div className="font-mono text-[22px] md:text-[34px] font-extrabold text-success tracking-tight leading-none whitespace-nowrap">&gt; market size</div>
           </div>
         </div>
       </div>
