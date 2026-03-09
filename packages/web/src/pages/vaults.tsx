@@ -25,9 +25,9 @@ const repBarColor: Record<string, string> = {
 };
 
 const voters = [
-  { id: "apex-oracle", name: "Apex Oracle", markets: 142, tier: "Elite", rep: "$190M", repW: 95, tvl: "$1.00M", currency: "USDC", apr: "18.5%", stake: "$1.00M", slash: "0.5%" },
-  { id: "sentinel-capital", name: "Sentinel Capital", markets: 105, tier: "Top", rep: "$72M", repW: 72, tvl: "$500K", currency: "USDC", apr: "31.0%", stake: "$500K", slash: "1.25%" },
-  { id: "vanguard-node", name: "Vanguard Node", markets: 76, tier: "Medium", rep: "$12M", repW: 48, tvl: "$500K", currency: "USDT", apr: "65.0%", stake: "$500K", slash: "5.2%" },
+  { id: "apex-oracle", name: "Apex Oracle", markets: 38, tier: "Elite", rep: "$850K", repW: 95, tvl: "$120K", currency: "USDC", apr: "12.4%", stake: "$50K", slash: "0.5%" },
+  { id: "sentinel-capital", name: "Sentinel Capital", markets: 24, tier: "Top", rep: "$320K", repW: 72, tvl: "$65K", currency: "USDC", apr: "22.0%", stake: "$25K", slash: "1.25%" },
+  { id: "vanguard-node", name: "Vanguard Node", markets: 11, tier: "Medium", rep: "$45K", repW: 48, tvl: "$30K", currency: "USDT", apr: "38.0%", stake: "$10K", slash: "5.2%" },
 ];
 
 export function VaultsPage() {
@@ -48,9 +48,9 @@ export function VaultsPage() {
 
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-2 md:gap-3 mb-6">
-        <StatCard label="Total Voters" value="1,000" />
-        <StatCard label="TVL" value="$48.5M" color="text-success" />
-        <StatCard label="Accuracy" value="93.2%" color="text-success" />
+        <StatCard label="Total Voters" value="3" />
+        <StatCard label="TVL" value="$215K" color="text-success" />
+        <StatCard label="Accuracy" value="100%" color="text-success" />
       </div>
 
       {/* Mobile: card layout */}

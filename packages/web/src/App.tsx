@@ -5,10 +5,14 @@ import { HomePage } from "@/pages/home";
 import { VaultsPage } from "@/pages/vaults";
 import { VaultDetailPage } from "@/pages/vault-detail";
 import { ActivityPage } from "@/pages/activity";
+import { DeckPage } from "@/pages/deck";
+import { OnePagerPage } from "@/pages/one-pager";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/deck" element={<DeckPage />} />
+        <Route path="/one-pager" element={<OnePagerPage />} />
         <Route
           path="*"
           element={
