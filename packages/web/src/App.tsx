@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import { ThemeProvider } from "@/lib/theme-context";
 import { Nav } from "@/components/landing/nav";
+import { PasswordGate } from "@/components/password-gate";
 import { HomePage } from "@/pages/home";
 import { VaultsPage } from "@/pages/vaults";
 import { VaultDetailPage } from "@/pages/vault-detail";
@@ -10,6 +11,7 @@ import { OnePagerPage } from "@/pages/one-pager";
 function App() {
   return (
     <BrowserRouter>
+      <PasswordGate>
       <Routes>
         <Route path="/deck" element={<DeckPage />} />
         <Route path="/one-pager" element={<OnePagerPage />} />
@@ -30,6 +32,7 @@ function App() {
           }
         />
       </Routes>
+      </PasswordGate>
     </BrowserRouter>
   );
 }
