@@ -785,7 +785,7 @@ function Slide09() {
             <p>$1B total markets</p>
             <p>400+ casinos</p>
             <p>6M monthly users</p>
-            <p>$1M/mo protocol rev, $100K/mo foundation</p>
+            <p>$1M/mo protocol rev, $100K/mo foundation rev</p>
           </div>
         </Card>
 
