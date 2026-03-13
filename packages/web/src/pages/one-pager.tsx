@@ -276,7 +276,7 @@ export function OnePagerPage() {
                   <span className="text-[20px] font-bold text-brand">Q2–Q3 2026</span>
                 </div>
                 <div className="text-[18px] font-bold text-text-1 mb-1">Wisdom Markets / SoftSwiss</div>
-                <p className="text-[17px] text-text-3">B2B iGaming: 400+ casinos, 6M MAU. $100M/mo resolved, $100K/mo revenue.</p>
+                <p className="text-[17px] text-text-3">B2B iGaming: 400+ casinos, 6M MAU. $1B/year resolved, $1M/year revenue. Foundation: $100K.</p>
               </Card>
               <Card accent="success" className="p-5">
                 <div className="flex items-center gap-2 mb-2">

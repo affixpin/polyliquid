@@ -780,10 +780,10 @@ function Slide09() {
           <div className="space-y-1.5 text-[16px] text-text-3 mt-auto">
             <p>B2B iGaming platform</p>
             <p>Powered by SoftSwiss</p>
-            <p>$100M/mo resolved</p>
+            <p>$1B/year resolved</p>
             <p>400+ casinos</p>
             <p>6M monthly users</p>
-            <p>$100K/mo oracle rev</p>
+            <p>$1M/year oracle rev</p>
           </div>
         </Card>
 
