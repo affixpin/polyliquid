@@ -18,15 +18,17 @@ function Slide({
   id,
   children,
   className = "",
+  last = false,
 }: {
   id: string;
   children: React.ReactNode;
   className?: string;
+  last?: boolean;
 }) {
   return (
     <div
       id={id}
-      className={`w-[1280px] h-[720px] bg-[var(--navy)] relative overflow-hidden shrink-0 ${className}`}
+      className={`w-[1280px] h-[720px] bg-[var(--navy)] relative overflow-hidden shrink-0 print:break-inside-avoid ${last ? "" : "print:break-after-page"} ${className}`}
     >
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.025]"
@@ -833,7 +835,7 @@ function Slide09() {
    ═══════════════════════════════════════════ */
 function Slide10() {
   return (
-    <Slide id="slide-10" className="bg-surface">
+    <Slide id="slide-10" className="bg-surface" last>
       <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-brand to-success" />
 
       <div className="flex-1 flex flex-col items-center justify-center text-center">
@@ -904,7 +906,7 @@ export function DeckPage() {
   }, [isLight]);
 
   return (
-    <div className={`min-h-screen flex flex-col items-center py-4 gap-1 ${isLight ? "bg-[#e8e6e2]" : "bg-black"}`}>
+    <div className={`min-h-screen flex flex-col items-center py-4 gap-1 print:py-0 print:gap-0 ${isLight ? "bg-[#e8e6e2]" : "bg-black"}`}>
       <Slide01 />
       <Slide02 />
       <Slide03 />
