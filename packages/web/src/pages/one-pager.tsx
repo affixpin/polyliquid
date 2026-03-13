@@ -191,7 +191,7 @@ export function OnePagerPage() {
               </Card>
               <Card className="p-4 text-center">
                 <div className="font-mono text-[42px] font-extrabold text-brand leading-none mb-1">$3–10M</div>
-                <p className="text-[16px] text-text-3">Foundation (10%)<br />per month</p>
+                <p className="text-[16px] text-text-3">Foundation (10%)<br />per year</p>
               </Card>
             </div>
           </div>

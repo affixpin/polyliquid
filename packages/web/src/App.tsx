@@ -6,6 +6,7 @@ import { HomePage } from "@/pages/home";
 import { VaultsPage } from "@/pages/vaults";
 import { VaultDetailPage } from "@/pages/vault-detail";
 import { ActivityPage } from "@/pages/activity";
+import { LimitlessOfferPage } from "@/pages/limitless-offer";
 import { DeckPage } from "@/pages/deck";
 import { OnePagerPage } from "@/pages/one-pager";
 function App() {
@@ -14,6 +15,7 @@ function App() {
       <PasswordGate>
       <Routes>
         <Route path="/deck" element={<DeckPage />} />
+        <Route path="/limitless-offer" element={<LimitlessOfferPage />} />
         <Route path="/one-pager" element={<OnePagerPage />} />
         <Route
           path="*"

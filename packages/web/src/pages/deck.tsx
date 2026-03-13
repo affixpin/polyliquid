@@ -3,33 +3,14 @@ import { useSearchParams } from "react-router";
 import { Logo } from "@/components/logo";
 import {
   Shield,
-  Infinity,
   Lock,
   AlertTriangle,
-  Scale,
   Coins,
   Rocket,
+  Zap,
+  Users,
+  GitCompare,
 } from "lucide-react";
-
-/* ── Limitless logo (star/cross from limitless.exchange) ── */
-
-function LimitlessLogo({ size = 48, className = "" }: { size?: number; className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 500 500"
-      width={size}
-      height={size}
-      fill="none"
-      className={className}
-    >
-      <path fillRule="evenodd" clipRule="evenodd" d="M 229.93 404.121 L 229.93 84.033 L 247.175 84.033 L 247.175 404.121 L 229.93 404.121 Z" fill="currentColor" />
-      <path fillRule="evenodd" clipRule="evenodd" d="M 24.56 283.806 L 465.278 258.955 L 466.26 276.005 L 25.539 300.856 L 24.56 283.806 Z" fill="currentColor" />
-      <path fillRule="evenodd" clipRule="evenodd" d="M 236.148 271.779 L 393.761 221.342 L 399.062 237.594 L 241.45 288.03 L 236.148 271.779 Z" fill="currentColor" />
-      <path fillRule="evenodd" clipRule="evenodd" d="M 230.667 288.892 L 289.382 156.746 L 305.167 163.625 L 246.449 295.771 L 230.667 288.892 Z" fill="currentColor" />
-      <path fillRule="evenodd" clipRule="evenodd" d="M 146.045 221.815 L 369.561 331.292 L 361.915 346.601 L 138.402 237.123 L 146.045 221.815 Z" fill="currentColor" />
-    </svg>
-  );
-}
 
 /* ── Shared slide primitives ── */
 
@@ -47,7 +28,6 @@ function Slide({
       id={id}
       className={`w-[1280px] h-[720px] bg-[var(--navy)] relative overflow-hidden shrink-0 ${className}`}
     >
-      {/* grain overlay */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.025]"
         style={{
@@ -190,50 +170,49 @@ function StepBadge({ n, color = "brand" }: { n: string; color?: string }) {
 function Slide01() {
   return (
     <Slide id="slide-1">
-      {/* Top accent line */}
       <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-brand to-success" />
 
       <div className="flex-1 flex flex-col justify-center">
-        <h1 className="font-mono text-[72px] font-extrabold tracking-tight text-text-1 uppercase leading-[1.05] flex items-center gap-5 flex-wrap">
-          <span className="inline-flex items-center gap-3"><Logo size={64} className="text-text-1" /> Polyliquid</span>
-          {" "}<span className="text-brand">×</span>{" "}
-          <span className="inline-flex items-center gap-3"><LimitlessLogo size={64} className="text-text-1" /> Limitless</span>
+        <h1 className="font-mono text-[72px] font-extrabold tracking-tight text-text-1 uppercase leading-[1.05] flex items-center gap-5">
+          <Logo size={64} className="text-text-1" /> Polyliquid
         </h1>
         <p className="text-[28px] text-success mt-3 font-medium italic">
-          Decentralized Reputational Oracle for Prediction Markets
+          Decentralized Delegated Reputation Oracle
         </p>
         <div className="w-16 h-[3px] bg-success rounded mt-6 mb-10" />
 
-        {/* Three feature cards */}
         <div className="grid grid-cols-3 gap-4">
           <Card className="p-5">
             <Shield size={36} className="text-success mb-3" />
             <div className="text-[20px] font-bold text-text-1 mb-2">
-              Delegate reputational risks
+              Attack &gt; 100% of market size
             </div>
             <p className="text-[16px] text-text-3 leading-relaxed">
-              Polyliquid takes on the responsibility for resolution. Your
-              reputation is protected by our oracle.
-            </p>
-          </Card>
-          <Card className="p-5">
-            <Infinity size={36} className="text-success mb-3" />
-            <div className="text-[20px] font-bold text-text-1 mb-2">
-              Unlimited number of markets
-            </div>
-            <p className="text-[16px] text-text-3 leading-relaxed">
-              Including permissionless market creation. Our vouter pool scales
-              to any volume.
+              219% for &lt;$10M<br />
+              110% for &gt;$10M<br />
+              Dual DAO — infinite
             </p>
           </Card>
           <Card className="p-5">
             <Lock size={36} className="text-success mb-3" />
             <div className="text-[20px] font-bold text-text-1 mb-2">
-              Attack &gt; 100% of market
+              Reputation cannot be bought
             </div>
             <p className="text-[16px] text-text-3 leading-relaxed">
-              The 0.2% fee is paid by the trader. LP slash on attack exceeds
-              the market size. With DAO — ∞.
+              Built over months.<br />
+              Decay 0.5%/day.<br />
+              Half-life: 138 days.
+            </p>
+          </Card>
+          <Card className="p-5">
+            <Coins size={36} className="text-success mb-3" />
+            <div className="text-[20px] font-bold text-text-1 mb-2">
+              $30B/year day-1 market
+            </div>
+            <p className="text-[16px] text-text-3 leading-relaxed">
+              $2.5B/mo resolved OI.<br />
+              $2.5M/mo fees.<br />
+              $250K/mo Foundation.
             </p>
           </Card>
         </div>
@@ -247,83 +226,80 @@ function Slide01() {
 }
 
 /* ═══════════════════════════════════════════
-   SLIDE 2: THE LIMITLESS PROBLEM
+   SLIDE 2: THE PROBLEM
    ═══════════════════════════════════════════ */
 function Slide02() {
   return (
     <Slide id="slide-2">
       <SectionHead
-        title="Value for Limitless"
-        subtitle="You're growing fast. But resolution is the bottleneck."
+        title="The Problem"
+        subtitle="Prediction markets need oracles. Current oracles are broken."
         icon={<AlertTriangle size={46} />}
       />
 
       <div className="grid grid-cols-2 gap-5 flex-1">
         <Card accent="danger" className="p-6">
           <h3 className="text-[24px] font-bold text-danger mb-5">
-            Current State
+            UMA (current oracle)
           </h3>
-          <div className="space-y-5">
+          <div className="space-y-4">
             <div>
-              <div className="text-[18px] font-bold text-text-1">
-                Resolution is centralized
+              <div className="text-[16px] text-text-3">Attack cost:</div>
+              <div className="font-mono text-[36px] font-extrabold text-danger leading-tight">
+                $2.5M fixed
               </div>
               <p className="text-[16px] text-text-3 mt-1">
-                Single point of failure. Reputational risk lies with the
-                Limitless team.
+                5M tokens + $750 tx fees.<br />
+                Same for $1M and $1B markets.<br />
+                Tokens NOT slashed after attack.
               </p>
             </div>
-            <div>
-              <div className="text-[18px] font-bold text-text-1">
-                Only the team creates markets
-              </div>
-              <p className="text-[16px] text-text-3 mt-1">
-                No permissionless — need to manually verify each market.
+            <div className="space-y-1">
+              <p className="text-[16px] text-text-2">
+                <span className="font-bold">March 2025:</span>{" "}
+                <span className="text-danger font-semibold">$7M stolen</span>
+              </p>
+              <p className="text-[16px] text-text-2">
+                <span className="font-bold">July 2025:</span>{" "}
+                <span className="text-danger font-semibold">$242M dispute</span>
               </p>
             </div>
-            <div>
-              <div className="text-[18px] font-bold text-text-1">
-                No dispute protection
-              </div>
-              <p className="text-[16px] text-text-3 mt-1">
-                If the result is disputed — who arbitrates? No formal process.
-              </p>
-            </div>
+            <p className="text-[16px] text-danger font-bold">
+              Vote weight = token holdings<br />
+              Influence bought instantly
+            </p>
           </div>
         </Card>
 
         <Card accent="success" className="p-6">
-          <h3 className="text-[24px] font-bold text-success mb-5">Needed</h3>
-          <div className="space-y-5">
+          <h3 className="text-[24px] font-bold text-success mb-5">
+            Polyliquid
+          </h3>
+          <div className="space-y-4">
             <div>
-              <div className="text-[18px] font-bold text-text-1">
-                Decentralized resolution
+              <div className="text-[16px] text-text-3">Attack cost:</div>
+              <div className="font-mono text-[36px] font-extrabold text-success leading-tight">
+                110–219%
               </div>
               <p className="text-[16px] text-text-3 mt-1">
-                Independent oracle. Reputational risk delegated. Limitless ≠
-                arbiter.
+                Scales with market size.<br />
+                100% slash — capital destroyed.<br />
+                Dual DAO — infinite protection.
               </p>
             </div>
             <div>
-              <div className="text-[18px] font-bold text-text-1">
-                Permissionless markets
-              </div>
+              <p className="text-[16px] font-bold text-text-1">
+                Vote weight = Stake × Reputation
+              </p>
               <p className="text-[16px] text-text-3 mt-1">
-                Anyone creates a market. The oracle guarantees fair resolution
-                and scales to any number of markets.
+                Reputation built over months<br />
+                Cannot be purchased
               </p>
             </div>
-            <div>
-              <div className="text-[18px] font-bold text-text-1">
-                Formal arbitration
-              </div>
-              <p className="text-[16px] text-text-3 mt-1">
-                Round 1 (vouter voting) → Dispute (bond-backed challenge) → DAO
-                arbitration (two independent DAOs vote for 48h). Fully
-                transparent, verifiable, on-chain process with economic
-                guarantees at every layer.
-              </p>
-            </div>
+            <p className="text-[16px] text-success font-bold">
+              $10M without reputation = 0%<br />
+              Money alone is powerless
+            </p>
           </div>
         </Card>
       </div>
@@ -332,81 +308,14 @@ function Slide02() {
 }
 
 /* ═══════════════════════════════════════════
-   SLIDE 3: WHY NOT UMA
+   SLIDE 3: HOW IT WORKS
    ═══════════════════════════════════════════ */
 function Slide03() {
   return (
     <Slide id="slide-3">
       <SectionHead
-        title="Oracle Case Study"
-        subtitle="Lessons from existing oracle designs."
-        icon={<AlertTriangle size={46} />}
-      />
-
-      <div className="grid grid-cols-2 gap-5 mb-5">
-        <Card accent="brand" className="p-6">
-          <h3 className="text-[21px] font-bold text-text-1 mb-3">
-            Case 1: March 2025
-          </h3>
-          <div className="space-y-2 text-[16px] text-text-3">
-            <p>
-              A holder of 5M UMA tokens (25% of voting power) influenced the
-              resolution of a market on the Trump/Ukraine deal.
-            </p>
-            <p>The platform acknowledged the incorrect resolution.</p>
-            <p className="font-semibold text-text-2">
-              Impact: $7M in trader losses.
-            </p>
-          </div>
-        </Card>
-
-        <Card accent="brand" className="p-6">
-          <h3 className="text-[21px] font-bold text-text-1 mb-3">
-            Case 2: July 2025
-          </h3>
-          <div className="space-y-2 text-[16px] text-text-3">
-            <p>
-              Market: "will Zelensky wear a suit". $242M volume. 40+ media
-              outlets reported "Yes". Oracle voted "No".
-            </p>
-            <p>Top 10 token holders controlled 30% of votes.</p>
-            <p className="font-semibold text-text-2">
-              Highlighted structural vulnerability in token-weighted oracles.
-            </p>
-          </div>
-        </Card>
-      </div>
-
-      <Card className="p-5 bg-brand/5 border-brand/20">
-        <p className="text-[17px] text-text-2">
-          <span className="text-brand font-bold">Key takeaway:</span> in
-          token-weighted oracles, vote power = token count. Influence can be
-          acquired instantly.
-        </p>
-        <p className="text-[17px] text-text-2 mt-1">
-          Estimated cost of attack:
-        </p>
-        <span className="font-mono text-[42px] font-extrabold text-text-1">
-          $750 + $2.5M
-        </span>
-        <span className="text-[17px] text-text-3 ml-2">
-          ($750 tx cost + 5M UMA tokens). Response was to whitelist 37
-          addresses — effectively centralizing the system.
-        </span>
-      </Card>
-    </Slide>
-  );
-}
-
-/* ═══════════════════════════════════════════
-   SLIDE 4: HOW IT WORKS
-   ═══════════════════════════════════════════ */
-function Slide04() {
-  return (
-    <Slide id="slide-4">
-      <SectionHead
-        title="Polyliquid: How it Works"
-        subtitle="3 layers of protection. Delegated reputation."
+        title="How It Works"
+        subtitle="Three layers of protection. Delegated reputation."
         icon={<Shield size={46} />}
       />
 
@@ -415,16 +324,13 @@ function Slide04() {
           <div className="flex items-center gap-3 mb-4">
             <StepBadge n="1" />
             <span className="text-[20px] font-bold text-text-1">
-              LP → Vouter
+              LP → Voter
             </span>
           </div>
           <div className="space-y-1.5 text-[16px] text-text-3">
-            <p>LP delegates capital to vouters by track record.</p>
-            <p>
-              Vouter stakes on markets. Manages liquidity of their LPs,
-              distributing it across markets as efficiently as possible.
-            </p>
-            <p>Vouter fee: 0% to 99%. Free market — set by ratio of total LP capital to prediction market rewards.</p>
+            <p>LP chooses voters by track record. Delegates capital. Voter stakes on outcomes.</p>
+            <p>Commission: 0–99%.</p>
+            <p>Set by market.</p>
           </div>
         </Card>
 
@@ -432,15 +338,13 @@ function Slide04() {
           <div className="flex items-center gap-3 mb-4">
             <StepBadge n="2" color="success" />
             <span className="text-[20px] font-bold text-text-1">
-              Commit-Reveal voting
+              Commit-Reveal
             </span>
           </div>
           <div className="space-y-1.5 text-[16px] text-text-3">
-            <p>Encrypted votes.</p>
-            <p>Weight = Stake × Reputation.</p>
-            <p>Consensus 50% + 1 voting power point</p>
-            <p>During REVEAL, LPs can withdraw liquidity from the vouter, reducing its vote weight. If LPs see a suspicious vote — they pull out and neutralize the attack.</p>
-            <p className="font-semibold text-text-2">Cannot be bought.</p>
+            <p>Encrypted votes (commit).</p>
+            <p>Reveal: LP sees vote, can exit if disagrees.</p>
+            <p>Collusion detection mechanism.</p>
           </div>
         </Card>
 
@@ -448,33 +352,27 @@ function Slide04() {
           <div className="flex items-center gap-3 mb-4">
             <StepBadge n="3" color="success" />
             <span className="text-[20px] font-bold text-text-1">
-              DAO arbitration
+              Dual DAO
             </span>
           </div>
           <div className="space-y-1.5 text-[16px] text-text-3">
-            <p>
-              Limitless traders pay a bond of 2% of{" "}
-              <code className="text-brand bg-brand/10 px-1 rounded text-[14px]">
-                MaxPayout
-              </code>{" "}
-              to dispute a resolution. Bond prevents spam disputes.
-            </p>
-            <p>DAO Limitless and DAO Polyliquid vote for 48 hours. Must be unanimous; in case of disagreement the market is annulled</p>
+            <p>Anyone posts 2% bond.</p>
+            <p>Two DAOs vote 48h in parallel: PL DAO + Client DAO.</p>
+            <p>Both must confirm.</p>
           </div>
         </Card>
       </div>
 
       <Card className="p-4 bg-surface border-success/30">
         <div className="text-[17px] text-text-2">
-          Vote weight formula:{" "}
+          Vote weight:{" "}
           <code className="font-mono text-success text-[20px] font-bold">
-            W = LP_stake × Reputation^k
+            W = LP_stake × Reputation^κ
           </code>
           <span className="ml-6 text-text-3">κ = 1.0 (Sybil-neutral)</span>
         </div>
         <div className="text-[14px] text-text-3 mt-1">
-          Reputation = Σ LP_stake × 0.995^(days since vote). Half-life: 138
-          days.
+          Reputation = Σ LP_stake × 0.995^(days). Half-life: 138 days. Fee: 0.1% of resolved OI. APY: 50%.
         </div>
       </Card>
     </Slide>
@@ -482,235 +380,86 @@ function Slide04() {
 }
 
 /* ═══════════════════════════════════════════
-   SLIDE 5: SLASHING AND DISPUTES
+   SLIDE 4: ATTACK COST
    ═══════════════════════════════════════════ */
-function Slide05() {
+function Slide04() {
   return (
-    <Slide id="slide-5">
+    <Slide id="slide-4">
       <SectionHead
-        title="Slashing and Disputes"
-        subtitle="What a vouter loses on a wrong vote. How bonds work."
-        icon={<Scale size={46} />}
-      />
-
-      <div className="grid grid-cols-2 gap-5 flex-1">
-        <Card className="p-5">
-          <h3 className="text-[21px] font-bold text-brand mb-4">
-            Vouter slashing
-          </h3>
-          <div className="space-y-4">
-            <div className="flex gap-3">
-              <StepBadge n="1" />
-              <div>
-                <div className="text-[17px] font-bold text-text-1">
-                  Reputation slash
-                </div>
-                <p className="text-[14px] text-text-3 mt-0.5">
-                  Losers lose up to 50% reputation (S_base). On dispute (DAO
-                  overturns): 100% reputation slash.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <StepBadge n="2" />
-              <div>
-                <div className="text-[17px] font-bold text-text-1">
-                  LP slash (financial)
-                </div>
-                <p className="text-[14px] text-text-3 mt-0.5">
-                  LP_slash = 20% flat. LPs can always withdraw their liquidity
-                  during reveal phase.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <StepBadge n="3" />
-              <div>
-                <div className="text-[17px] font-bold text-text-1">
-                  Slash distribution
-                </div>
-                <p className="text-[14px] text-text-3 mt-0.5">
-                  No dispute: slashes → correct voters (incentive). On dispute:
-                  50% correct voters, 25% Limitless, 25% Polyliquid.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <StepBadge n="!" color="danger" />
-              <div>
-                <div className="text-[17px] font-bold text-danger">
-                  On dispute (DAO overturns)
-                </div>
-                <p className="text-[14px] text-text-3 mt-0.5">
-                  100% reputation + 100% capital slash. Rep = 0 → LP leaves →
-                  income = $0 → recovery ~12 months.
-                </p>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-5">
-          <h3 className="text-[21px] font-bold text-success mb-4">
-            Dispute and bond
-          </h3>
-          <div className="space-y-4">
-            <div>
-              <div className="text-[17px] font-bold text-text-1">
-                Who can dispute?
-              </div>
-              <p className="text-[14px] text-text-3 mt-0.5">
-                Limitless users who pay a bond to dispute/challenge a market
-                resolution.
-              </p>
-            </div>
-            <div>
-              <div className="text-[17px] font-bold text-text-1">
-                Bond = 2% of market MaxPayout
-              </div>
-              <p className="text-[14px] text-text-3 mt-0.5">
-                $1M → bond $20K | $10M → $200K | $100M → $2M
-              </p>
-            </div>
-            <div>
-              <div className="text-[17px] font-bold text-text-1">
-                What happens after bonding?
-              </div>
-              <p className="text-[14px] text-text-3 mt-0.5">
-                2 DAOs vote for 48h. Separate group from Round 1.
-              </p>
-            </div>
-            <div>
-              <div className="text-[17px] font-bold text-text-1">
-                DAO confirms Round 1 (spam dispute):
-              </div>
-              <p className="text-[14px] text-success mt-0.5">
-                Bond → 100% to Limitless.
-                <br />
-                Slashes → 75% to correct voters, 25% Polyliquid.
-              </p>
-            </div>
-            <div>
-              <div className="text-[17px] font-bold text-text-1">
-                DAO overturns Round 1 (attack):
-              </div>
-              <p className="text-[14px] text-success mt-0.5">
-                Bond → returned to disputer.
-                <br />
-                Slashes → 50% correct voters, 25% Limitless, 25% Polyliquid.
-                Attackers' rep = 0.
-              </p>
-            </div>
-          </div>
-        </Card>
-      </div>
-    </Slide>
-  );
-}
-
-/* ═══════════════════════════════════════════
-   SLIDE 6: COST OF ATTACK
-   ═══════════════════════════════════════════ */
-function Slide06() {
-  return (
-    <Slide id="slide-6">
-      <SectionHead
-        title="Cost of Attack"
-        subtitle="Round 1 at dispute: 219% of market (excl. NPV). Round 1 + DAO: ∞."
+        title="Attack Cost"
+        subtitle="Derived from fee structure. Scales automatically with market size."
         icon={<Lock size={46} />}
       />
 
-      {/* Three big metric cards */}
       <div className="grid grid-cols-3 gap-4 mb-6">
         <Card accent="danger" className="p-5 text-center">
           <div className="text-[16px] font-mono font-bold text-danger uppercase tracking-wider mb-2">
             UMA
           </div>
           <div className="font-mono text-[40px] font-extrabold text-danger leading-none">
-            $750 + $2.5M
+            $2.5M
           </div>
-          <div className="text-[14px] text-text-3 mt-2">cost of attack</div>
+          <div className="text-[14px] text-text-3 mt-2">fixed (5M tokens)</div>
           <div className="text-[13px] text-text-3 mt-1">
-            ($750 tx cost + 5M UMA tokens)
+            Same for $1M and $1B<br />
+            Tokens not slashed
           </div>
         </Card>
 
         <Card accent="success" className="p-5 text-center">
           <div className="text-[16px] font-mono font-bold text-success uppercase tracking-wider mb-2">
-            Polyliquid Round 1
+            Polyliquid R1
           </div>
           <div className="font-mono text-[62px] font-extrabold text-success leading-none">
-            219%
+            110–219
           </div>
-          <div className="text-[14px] text-text-3 mt-2">of market on dispute</div>
+          <div className="text-[14px] text-text-3 mt-2">of market size %</div>
           <div className="text-[13px] text-text-3 mt-1">
-            Revenue for utilised liquidity, shared
-            <br />
-            between LPs and voters by reputation.
+            100% slash. Scales.<br />
+            Capital destroyed.
           </div>
         </Card>
 
         <Card accent="success" className="p-5 text-center">
           <div className="text-[16px] font-mono font-bold text-success uppercase tracking-wider mb-2">
-            Round 1 + DAO
+            R1 + Dual DAO
           </div>
           <div className="font-mono text-[62px] font-extrabold text-success leading-none">
             ∞
           </div>
           <div className="text-[14px] text-text-3 mt-2">
-            DAO overturns attack
+            two DAOs in parallel
           </div>
           <div className="text-[13px] text-text-3 mt-1">
-            Any market size
-            <br />
-            is protected by second round.
+            Must bribe PL DAO<br />
+            AND client DAO (e.g. PM)
           </div>
         </Card>
       </div>
 
-      {/* Why attack > 100% table */}
       <div className="text-[18px] font-bold text-text-1 mb-2">
-        Why attack &gt; 100% of market (at dispute, excl. NPV)
+        How 0.1% fee creates &gt;100% security (50% APY, 100% slash)
       </div>
       <Table
-        headers={["Step", "Formula", "Logic"]}
+        headers={["Step", "< $10M (8h)", "> $10M (16h)", "Logic"]}
         rows={[
           [
             "Fee",
-            { text: "V × 0.2%", className: "font-mono font-bold text-text-1" },
-            "Trader pays 0.2% of market volume (V) for resolution",
+            { text: "V × 0.1%", className: "font-mono font-bold text-text-1" },
+            { text: "V × 0.1%", className: "font-mono font-bold text-text-1" },
+            "0.1% of resolved OI",
           ],
           [
             "LP locked",
-            {
-              text: "V × 0.2% / (100% × 8/(365×24)) = V × 2.19",
-              className: "font-mono font-bold text-text-1",
-            },
-            "At 100% APY for 8h, LP needed = 2.19× market size",
+            { text: "V × 2.19", className: "font-mono font-bold text-text-1" },
+            { text: "V × 1.095", className: "font-mono font-bold text-text-1" },
+            "At 50% APY for lockup period",
           ],
           [
-            "LP 100% loss",
-            {
-              text: "V × 2.19 × 100%",
-              className: "font-mono font-bold text-success",
-            },
-            {
-              text: "219% of market. LP loses all locked capital on dispute.",
-              className: "text-success font-semibold",
-            },
-          ],
-          [
-            "100% reputation loss",
-            {
-              text: "Reputation = 0, Future Profits = 0",
-              className: "font-mono text-text-2",
-            },
-            "Vouter loses all reputation and future profits. Recovery ~12 months.",
-          ],
-          [
-            "+ Bond (bonus)",
-            { text: "+ V × 2%", className: "font-mono text-text-2" },
-            "Non-refundable deposit to trigger DAO. On top.",
+            "Slash 100%",
+            { text: "219%", className: "font-mono font-bold text-success" },
+            { text: "110%", className: "font-mono font-bold text-success" },
+            { text: "Total capital destruction on dispute", className: "text-success font-semibold" },
           ],
         ]}
       />
@@ -719,215 +468,90 @@ function Slide06() {
 }
 
 /* ═══════════════════════════════════════════
-   SLIDE 7: CASCADE OF DESTRUCTION
+   SLIDE 5: CASE STUDY
    ═══════════════════════════════════════════ */
-function Slide07() {
+function Slide05() {
   return (
-    <Slide id="slide-7">
+    <Slide id="slide-5">
       <SectionHead
-        title="Cascade of Destruction"
-        subtitle="Why vouters won't attack. Economics are against them."
-      />
-
-      <div className="flex-1 flex items-center">
-        <div className="grid grid-cols-5 gap-4 w-full">
-          {[
-            {
-              n: "1",
-              title: "DAO overturns Round 1",
-              desc: "Reputation = 0",
-              color: "danger",
-            },
-            {
-              n: "2",
-              title: "LP slash 100%",
-              desc: "All capital lost",
-              color: "danger",
-            },
-            {
-              n: "3",
-              title: "LP leaves",
-              desc: "All capital withdrawn",
-              color: "danger",
-            },
-            {
-              n: "4",
-              title: "No LP = no income",
-              desc: "All income → $0",
-              color: "danger",
-            },
-            {
-              n: "5",
-              title: "Recovery",
-              desc: "~12 months",
-              color: "brand",
-            },
-          ].map((step) => (
-            <Card key={step.n} className="p-5 text-center">
-              <div className="flex justify-center mb-4">
-                <StepBadge n={step.n} color={step.color} />
-              </div>
-              <div className="text-[18px] font-bold text-text-1 mb-2">
-                {step.title}
-              </div>
-              <div className="text-[16px] text-text-3">{step.desc}</div>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </Slide>
-  );
-}
-
-/* ═══════════════════════════════════════════
-   SLIDE 8: RESOLUTION AND DISPUTE
-   ═══════════════════════════════════════════ */
-function Slide08() {
-  return (
-    <Slide id="slide-8">
-      <SectionHead title="Resolution and Dispute" />
-
-      <div className="grid grid-cols-2 gap-5 mb-6">
-        <div>
-          <Table
-            headers={["Phase", "Duration"]}
-            rows={[
-              ["Commit", "2 hours"],
-              ["Reveal", "2 hours"],
-              ["Dispute window", "4 hours"],
-              [
-                { text: "Total Round 1", className: "text-success font-bold" },
-                { text: "8 hours", className: "text-success font-bold" },
-              ],
-              ["+ DAO (if dispute)", "+ 48h = 56h"],
-            ]}
-          />
-        </div>
-
-        <Card className="p-6 bg-success/5 border-success/20 flex flex-col justify-center">
-          <div className="text-[18px] text-text-2 mb-1">Limitless earns</div>
-          <div className="font-mono text-[36px] font-extrabold text-success leading-tight">
-            100% of bond{" "}
-            <span className="text-[18px] font-normal text-text-3">
-              on spam dispute
-            </span>
-          </div>
-          <div className="font-mono text-[36px] font-extrabold text-success leading-tight">
-            25% of slashes{" "}
-            <span className="text-[18px] font-normal text-text-3">
-              on attack
-            </span>
-          </div>
-          <p className="text-[16px] text-text-3 italic mt-3">
-            This is revenue that you don't have now.
-          </p>
-        </Card>
-      </div>
-
-      <div className="text-[18px] font-bold text-text-1 mb-2">
-        Slash and bond distribution
-      </div>
-      <Table
-        headers={["Scenario", "Slashes", "Bond", "Limitless", "Polyliquid"]}
-        rows={[
-          ["No dispute", "→ correct voters", "—", "$0", "$0"],
-          [
-            "DAO = Round 1 (spam dispute)",
-            "→ 75% correct voters",
-            "→ to Limitless",
-            { text: "100% of bond", className: "text-success font-semibold" },
-            { text: "25% of slashes", className: "text-success font-semibold" },
-          ],
-          [
-            { text: "DAO ≠ Round 1 (attack)", className: "font-bold text-text-1" },
-            "50% correct voters,\n25% Limitless, 25% Polyliquid",
-            "Returned",
-            { text: "25% of slashes", className: "text-success font-semibold" },
-            { text: "25% of slashes", className: "text-success font-semibold" },
-          ],
-        ]}
-      />
-    </Slide>
-  );
-}
-
-/* ═══════════════════════════════════════════
-   SLIDE 9: PERMISSIONLESS MARKETS
-   ═══════════════════════════════════════════ */
-function Slide09() {
-  return (
-    <Slide id="slide-9">
-      <SectionHead
-        title="Permissionless Markets"
-        subtitle="Polyliquid lets anyone create markets. The oracle scales."
-        icon={<Infinity size={46} />}
+        title="Case Study: $1B Market"
+        subtitle="Attacker flow on a $1B market with only $100M LP (early stage)."
+        icon={<Zap size={46} />}
       />
 
       <div className="grid grid-cols-2 gap-5 flex-1">
         <Card accent="danger" className="p-6">
           <h3 className="text-[24px] font-bold text-danger mb-5">
-            Without Polyliquid
+            Attacker's Plan
           </h3>
-          <div className="space-y-5">
+          <div className="space-y-4">
             <div>
-              <div className="text-[18px] font-bold text-text-1">
-                Every market — manual work
+              <div className="text-[17px] font-bold text-text-1">
+                1. Buy YES @ $0.01 on Polymarket
               </div>
-              <p className="text-[16px] text-text-3 mt-1">
-                Team verifies description, resolution conditions, possible
-                ambiguities.
+              <p className="text-[15px] text-text-3 mt-0.5">
+                $10M → 1B shares → payout $1B<br />
+                Potential profit: $990M
               </p>
             </div>
             <div>
-              <div className="text-[18px] font-bold text-text-1">
-                Disputed result = crisis
+              <div className="text-[17px] font-bold text-text-1">
+                2. Bribe R1 voters on Polyliquid
               </div>
-              <p className="text-[16px] text-text-3 mt-1">
-                No formal arbitration. Any dispute — reputational damage to
-                Limitless.
+              <p className="text-[15px] text-text-3 mt-0.5">
+                Need &gt;$50M in voting weight<br />
+                Compensate 100% slash + NPV<br />
+                Cost: ~$75–80M
               </p>
             </div>
             <div>
-              <div className="text-[18px] font-bold text-text-1">
-                Scaling is limited
+              <div className="text-[17px] font-bold text-danger">
+                3. R1 resolves YES (incorrect)
               </div>
-              <p className="text-[16px] text-text-3 mt-1">
-                Bottleneck: how many markets the team can service.
+              <p className="text-[15px] text-text-3 mt-0.5">
+                R1 bribe = 7.5% of profit
               </p>
             </div>
+            <p className="text-[16px] text-danger font-bold">
+              R1 alone does NOT protect
+            </p>
           </div>
         </Card>
 
         <Card accent="success" className="p-6">
           <h3 className="text-[24px] font-bold text-success mb-5">
-            With Polyliquid
+            Dual DAO Backstop
           </h3>
-          <div className="space-y-5">
+          <div className="space-y-4">
             <div>
-              <div className="text-[18px] font-bold text-text-1">
-                Anyone creates a market
+              <div className="text-[17px] font-bold text-text-1">
+                4. Honest participant disputes
               </div>
-              <p className="text-[16px] text-text-3 mt-1">
-                Polyliquid vouters resolve any event. Permissionless creation =
-                growth without limits.
+              <p className="text-[15px] text-text-3 mt-0.5">
+                Bond: 2% × $1B = $20M<br />
+                Both DAOs vote 48h in parallel
               </p>
             </div>
             <div>
-              <div className="text-[18px] font-bold text-text-1">
-                DAO resolves disputes
+              <div className="text-[17px] font-bold text-text-1">
+                5. Can attacker bribe BOTH DAOs?
               </div>
-              <p className="text-[16px] text-text-3 mt-1">
-                Formal on-chain arbitration. Limitless — not the arbiter.
-                Reputational risk delegated to Polyliquid.
+              <p className="text-[15px] text-text-3 mt-0.5">
+                PL DAO: early stage<br />
+                Client DAO (e.g. PM): FDV $10B+<br />
+                Need &gt;50% of client = $5B+<br />
+                Profit $990M &lt; $5B
               </p>
             </div>
+            <div className="font-mono text-[36px] font-extrabold text-success">
+              IMPOSSIBLE
+            </div>
             <div>
-              <div className="text-[18px] font-bold text-text-1">
-                ∞ scaling
+              <div className="text-[17px] font-bold text-success">
+                6. Dual DAO overturns → NO
               </div>
-              <p className="text-[16px] text-text-3 mt-1">
-                Vouter pool grows with the market. More volume → more rewards →
-                more vouters.
+              <p className="text-[15px] text-text-3 mt-0.5">
+                Attacker: -$85M total loss
               </p>
             </div>
           </div>
@@ -938,121 +562,192 @@ function Slide09() {
 }
 
 /* ═══════════════════════════════════════════
-   SLIDE 10: ECONOMICS FOR LIMITLESS
+   SLIDE 6: DUAL DAO GOVERNANCE
    ═══════════════════════════════════════════ */
-function Slide10() {
+function Slide06() {
   return (
-    <Slide id="slide-10">
+    <Slide id="slide-6">
       <SectionHead
-        title="Economics for Limitless"
-        subtitle="The 0.2% fee is paid by the trader. Free for Limitless."
+        title="Dual DAO Governance"
+        subtitle="Two independent DAOs vote in parallel. Must bribe both = impossible."
+        icon={<Users size={46} />}
+      />
+
+      <div className="grid grid-cols-2 gap-5 mb-5">
+        <Card accent="brand" className="p-6">
+          <h3 className="text-[24px] font-bold text-brand mb-5">
+            Polyliquid DAO
+          </h3>
+          <div className="space-y-3 text-[16px] text-text-3">
+            <p><span className="font-bold text-text-2">Token:</span> PL</p>
+            <p><span className="font-bold text-text-2">Voters:</span> PL token holders</p>
+            <p><span className="font-bold text-text-2">Quorum:</span> set by PL governance</p>
+            <p className="mt-3">
+              <span className="font-bold text-text-2">Motivation:</span> protect protocol reputation, LP trust, token value
+            </p>
+          </div>
+        </Card>
+
+        <Card accent="success" className="p-6">
+          <h3 className="text-[24px] font-bold text-success mb-5">
+            Client DAO (e.g. Polymarket)
+          </h3>
+          <div className="space-y-3 text-[16px] text-text-3">
+            <p><span className="font-bold text-text-2">Token:</span> client token (e.g. POLY)</p>
+            <p><span className="font-bold text-text-2">Voters:</span> client token holders</p>
+            <p><span className="font-bold text-text-2">FDV:</span> <span className="text-success font-bold">$10B+ at scale</span></p>
+            <p className="mt-3">
+              <span className="font-bold text-text-2">Motivation:</span> protect platform credibility, user trust, deposits
+            </p>
+          </div>
+        </Card>
+      </div>
+
+      <Card className="p-5 bg-success/5 border-success/20">
+        <p className="text-[17px] text-text-2">
+          <span className="font-bold">Both DAOs financially motivated → votes will happen.</span>{" "}
+          Both must agree to overturn.
+        </p>
+        <p className="text-[17px] text-success font-bold mt-1">
+          Attacker must bribe BOTH DAOs simultaneously. Client DAO FDV $10B+ = unbribable.
+        </p>
+        <p className="text-[15px] text-text-3 mt-1">
+          Protocol inherits security of its largest client's governance system.
+        </p>
+      </Card>
+    </Slide>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   SLIDE 7: ECONOMICS
+   ═══════════════════════════════════════════ */
+function Slide07() {
+  return (
+    <Slide id="slide-7">
+      <SectionHead
+        title="Economics"
+        subtitle="$30B/year addressable from day one. Self-sustaining model."
         icon={<Coins size={46} />}
       />
 
-      <div className="grid grid-cols-2 gap-5 mb-6">
-        <Card className="p-6">
-          <div className="text-[18px] font-bold text-text-1 mb-3">
-            Cost for Limitless
+      <div className="grid grid-cols-2 gap-5 mb-5">
+        <Card accent="brand" className="p-6">
+          <h3 className="text-[21px] font-bold text-text-1 mb-4">
+            Day-1 Revenue (Polymarket)
+          </h3>
+          <div className="space-y-2 text-[16px] text-text-3">
+            <p>Resolved OI: <span className="font-mono font-bold text-success text-[22px]">$2.5B/month</span></p>
+            <p>Fee (0.1%): <span className="font-mono font-bold text-success text-[22px]">$2.5M/month</span></p>
+            <p>Voter + LP (90%): $2.25M/mo</p>
+            <p>Foundation (10%): <span className="text-brand font-bold">$250K/mo</span></p>
           </div>
-          <div className="font-mono text-[62px] font-extrabold text-success leading-none">
-            $0
-          </div>
-          <p className="text-[16px] text-text-3 mt-3">
-            The 0.2% fee is paid by the trader, not Limitless. Integration is
-            free.
-          </p>
         </Card>
 
-        <Card className="p-6">
-          <div className="text-[18px] font-bold text-text-1 mb-3">
-            Revenue for Limitless
-          </div>
-          <p className="text-[17px] text-text-2">
-            On spam dispute:{" "}
-            <span className="text-success font-bold">100% of bond</span>
-          </p>
-          <p className="text-[17px] text-text-2 mt-1">
-            On attack:{" "}
-            <span className="text-success font-bold">25% of slashes</span>
-          </p>
-          <div className="text-[14px] text-text-3 mt-3 space-y-0.5">
-            <p>Plus:</p>
-            <p>• Permissionless → more markets → more volume</p>
-            <p>• Risk delegation → lower support costs</p>
-            <p>• Trader trust → retention</p>
+        <Card accent="success" className="p-6">
+          <h3 className="text-[21px] font-bold text-text-1 mb-4">
+            Market Opportunity
+          </h3>
+          <div className="space-y-2 text-[16px] text-text-3">
+            <p>Conservative (PM only):</p>
+            <p className="font-mono font-bold text-success text-[22px]">$30B/year resolved OI</p>
+            <p>Realistic (growth + other PMs):</p>
+            <p className="font-mono font-bold text-text-1 text-[22px]">$100B/year</p>
+            <p className="mt-2">Oracle TAM: $30–100M/year</p>
           </div>
         </Card>
       </div>
 
+      <div className="text-[18px] font-bold text-text-1 mb-2">
+        Security scales with market size
+      </div>
+      <Table
+        headers={["Market OI", "Fee", "LP locked", "Attack cost"]}
+        rows={[
+          [
+            "$1M",
+            "$1K",
+            "$2.19M",
+            { text: "219%", className: "text-success font-bold" },
+          ],
+          [
+            "$100M",
+            "$100K",
+            "$109.5M",
+            { text: "110%", className: "text-success font-bold" },
+          ],
+          [
+            "$1B",
+            "$1M",
+            "$1.095B",
+            { text: "110%", className: "text-success font-bold" },
+          ],
+        ]}
+      />
     </Slide>
   );
 }
 
 /* ═══════════════════════════════════════════
-   SLIDE 11: COMPARISON OF APPROACHES
+   SLIDE 8: UMA vs POLYLIQUID
    ═══════════════════════════════════════════ */
-function Slide11() {
+function Slide08() {
   return (
-    <Slide id="slide-11">
+    <Slide id="slide-8">
       <SectionHead
-        title="Comparison of Approaches"
-        subtitle="Centralized vs UMA vs Polyliquid"
+        title="UMA vs Polyliquid"
+        subtitle="Head-to-head comparison."
+        icon={<GitCompare size={46} />}
       />
 
       <div className="flex-1">
         <Table
-          headers={["", "Current State (centralized)", "UMA", "Polyliquid"]}
+          headers={["", "UMA", "Polyliquid"]}
           rows={[
             [
-              "Cost of attack",
-              "n/a (trust the team)",
-              { text: "$750 + $2.5M tokens", className: "text-danger font-bold" },
-              {
-                text: ">219% of market (Round 1)",
-                className: "text-success font-bold",
-              },
+              "Attack cost",
+              { text: "$2.5M fixed (tokens kept)", className: "text-danger font-bold" },
+              { text: "110–219% of market (100% slash)", className: "text-success font-bold" },
             ],
             [
-              "Decentralization",
-              { text: "No", className: "text-danger" },
-              { text: "Formally (whales)", className: "text-danger" },
-              {
-                text: "100% anonymized decentralization",
-                className: "text-success font-bold",
-              },
+              "Cost scaling",
+              { text: "Same for $1M and $1B", className: "text-danger" },
+              { text: "Proportional to market size", className: "text-success font-bold" },
             ],
             [
-              "Permissionless",
-              { text: "No", className: "text-danger" },
-              { text: "Yes, but vulnerable", className: "text-danger" },
-              { text: "Yes, protected", className: "text-success font-bold" },
+              "Vote weight",
+              "Tokens ($)",
+              { text: "Stake × Reputation (κ=1.0)", className: "text-success font-bold" },
             ],
             [
-              "Dispute arbitration",
-              "Team decides",
-              "Tokenholders",
-              { text: "Limitless DAO + Polyliquid DAO", className: "text-success font-bold" },
+              "Slash on attack",
+              { text: "0% (tokens kept)", className: "text-danger font-bold" },
+              { text: "100% flat (total destruction)", className: "text-success font-bold" },
+            ],
+            [
+              "Dispute system",
+              "Single DAO (UMA token)",
+              { text: "Dual DAO (PL + Client)", className: "text-success font-bold" },
+            ],
+            [
+              "Collusion detect",
+              { text: "None", className: "text-danger" },
+              { text: "LP Exit in Reveal phase", className: "text-success font-bold" },
             ],
             [
               "Resolution time",
-              { text: "Fast", className: "font-bold text-text-1" },
               "~48h",
-              { text: "8h", className: "text-success font-bold" },
+              { text: "8–16h (99%)", className: "text-success font-bold" },
             ],
             [
-              "Reputational risk",
-              { text: "On Limitless", className: "text-danger font-bold" },
-              { text: "On UMA (unreliable)", className: "text-danger" },
-              { text: "On Polyliquid", className: "text-success font-bold" },
+              "2025 exploits",
+              { text: "$7M stolen + $242M dispute", className: "text-danger" },
+              { text: "∞ with Dual DAO", className: "text-success font-bold" },
             ],
             [
-              "Limitless revenue",
-              "$0",
-              "$0",
-              {
-                text: "Bonds + slashes",
-                className: "text-success font-bold",
-              },
+              "Oracle fee",
+              "UMA inflation funded",
+              { text: "0.1% of resolved OI", className: "text-success font-bold" },
             ],
           ]}
         />
@@ -1062,68 +757,70 @@ function Slide11() {
 }
 
 /* ═══════════════════════════════════════════
-   SLIDE 12: INTEGRATION PLAN
+   SLIDE 9: ROADMAP
    ═══════════════════════════════════════════ */
-function Slide12() {
+function Slide09() {
   return (
-    <Slide id="slide-12">
+    <Slide id="slide-9">
       <SectionHead
-        title="Integration Plan"
-        subtitle="3 stages. From testnet to full autonomy."
+        title="Roadmap"
+        subtitle="From Wisdom Markets to Polymarket."
         icon={<Rocket size={46} />}
       />
 
       <div className="grid grid-cols-3 gap-5 flex-1">
         <Card accent="brand" className="p-6 flex flex-col">
           <div className="flex items-center gap-3 mb-2">
-            <StepBadge n="I" />
+            <StepBadge n="1" />
             <span className="text-[20px] font-bold text-text-1">
-              Testnet + pilot
+              Wisdom Markets
             </span>
           </div>
-          <div className="text-[17px] font-bold text-brand mb-4">Q2 2026</div>
+          <div className="text-[17px] font-bold text-brand mb-4">Q2–Q3 2026</div>
           <div className="space-y-1.5 text-[16px] text-text-3 mt-auto">
-            <p>Oracle integration on Base testnet.</p>
-            <p>Pilot: 10–20 subjective markets.</p>
-            <p>Timing and UX debugging.</p>
-            <p>Polyliquid vouters resolve in parallel with Limitless team.</p>
-            <p>Results comparison.</p>
+            <p>B2B iGaming platform</p>
+            <p>Powered by SoftSwiss</p>
+            <p>$100M/mo resolved</p>
+            <p>400+ casinos</p>
+            <p>6M monthly users</p>
+            <p>$100K/mo oracle rev</p>
           </div>
         </Card>
 
         <Card accent="success" className="p-6 flex flex-col">
           <div className="flex items-center gap-3 mb-2">
-            <StepBadge n="II" color="success" />
+            <StepBadge n="2" color="success" />
             <span className="text-[20px] font-bold text-text-1">
-              Live subjective
+              Expansion
             </span>
           </div>
           <div className="text-[17px] font-bold text-success mb-4">
-            Q2–Q3 2026
+            Q3–Q4 2026
           </div>
           <div className="space-y-1.5 text-[16px] text-text-3 mt-auto">
-            <p>All subjective markets resolved via Polyliquid.</p>
-            <p>Objective (crypto prices) — stay on data feeds.</p>
-            <p>Limitless earns revenue from bonds and slashes.</p>
+            <p>Other prediction market platforms.</p>
+            <p>Grow voter community.</p>
+            <p>Points + early airdrop.</p>
+            <p>Prove reliability.</p>
           </div>
         </Card>
 
         <Card accent="success" className="p-6 flex flex-col">
           <div className="flex items-center gap-3 mb-2">
-            <StepBadge n="III" color="success" />
+            <StepBadge n="3" color="success" />
             <span className="text-[20px] font-bold text-text-1">
-              Permissionless
+              Polymarket
             </span>
           </div>
           <div className="text-[17px] font-bold text-success mb-4">
-            Q3 2026
+            2027
           </div>
           <div className="space-y-1.5 text-[16px] text-text-3 mt-auto">
-            <p>Opening permissionless market creation.</p>
-            <p>
-              Any user creates a market. Polyliquid provides resolution.
-              Limitless scales without limits.
-            </p>
+            <p>Replace UMA.</p>
+            <p>$2.5B+/mo resolved.</p>
+            <p>Permissionless mkts.</p>
+            <p>110–219% vs $2.5M.</p>
+            <p>Full airdrop.</p>
           </div>
         </Card>
       </div>
@@ -1132,27 +829,20 @@ function Slide12() {
 }
 
 /* ═══════════════════════════════════════════
-   SLIDE 13: CLOSING
+   SLIDE 10: CLOSING
    ═══════════════════════════════════════════ */
-function Slide13() {
+function Slide10() {
   return (
-    <Slide id="slide-13" className="bg-surface">
+    <Slide id="slide-10" className="bg-surface">
       <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-brand to-success" />
 
       <div className="flex-1 flex flex-col items-center justify-center text-center">
-        <div className="flex items-center gap-6 mb-4">
-          <div className="flex items-center gap-2">
-            <Logo size={48} className="text-text-1" />
-            <span className="font-mono text-[26px] font-bold text-text-1">Polyliquid</span>
-          </div>
-          <span className="text-brand text-[36px] font-bold">×</span>
-          <div className="flex items-center gap-2">
-            <LimitlessLogo size={48} className="text-text-1" />
-            <span className="font-mono text-[26px] font-bold text-text-1">Limitless</span>
-          </div>
-        </div>
+        <Logo size={64} className="text-text-1 mb-4" />
+        <h1 className="font-mono text-[72px] font-extrabold tracking-tight text-text-1 uppercase leading-[1.05]">
+          Polyliquid
+        </h1>
         <p className="text-[26px] text-success mt-3 italic font-medium">
-          Delegate resolution. Scale markets.
+          Decentralized Delegated Reputation Oracle
         </p>
         <div className="w-16 h-[3px] bg-success rounded mt-6 mb-8" />
 
@@ -1160,24 +850,22 @@ function Slide13() {
           <Card className="p-4 text-center">
             <Shield size={32} className="text-success mx-auto mb-2" />
             <p className="text-[14px] text-text-3">
-              Attack &gt; 100% of market
-              <br />
-              $0 for Limitless
-            </p>
-          </Card>
-          <Card className="p-4 text-center">
-            <Infinity size={32} className="text-success mx-auto mb-2" />
-            <p className="text-[14px] text-text-3">
-              Permissionless markets
-              <br />
-              without reputational risk
+              Attack &gt; 100% of market<br />
+              100% slash on dispute
             </p>
           </Card>
           <Card className="p-4 text-center">
             <Coins size={32} className="text-success mx-auto mb-2" />
             <p className="text-[14px] text-text-3">
-              100% of bond + 25% of slashes
-              <br />→ Limitless revenue
+              $30B/year from day one<br />
+              $2.5M/mo fee revenue
+            </p>
+          </Card>
+          <Card className="p-4 text-center">
+            <Lock size={32} className="text-success mx-auto mb-2" />
+            <p className="text-[14px] text-text-3">
+              Dual DAO = unbribable<br />
+              Client DAO FDV $10B+
             </p>
           </Card>
         </div>
@@ -1189,6 +877,8 @@ function Slide13() {
           Money can be bought instantly. Trust cannot.
         </p>
       </div>
+
+      <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-brand to-success" />
     </Slide>
   );
 }
@@ -1200,7 +890,6 @@ export function DeckPage() {
   const [params] = useSearchParams();
   const isLight = params.get("theme") === "light";
 
-  // Apply theme class synchronously before first paint
   if (typeof document !== "undefined") {
     const root = document.documentElement;
     if (isLight) root.classList.add("light");
@@ -1226,9 +915,6 @@ export function DeckPage() {
       <Slide08 />
       <Slide09 />
       <Slide10 />
-      <Slide11 />
-      <Slide12 />
-      <Slide13 />
     </div>
   );
 }
